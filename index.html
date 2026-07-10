@@ -7,6 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body,body *{transition:background-color .4s ease,color .4s ease,border-color .4s ease;}
+.orb,.cloud-bg,.hp,.falling-leaf,.tap-star,.ee-leaf,.ee-cloud,.ee-star,#cur,#cur-ring{transition:none;}
 
 /* ══════════════════════
    LIGHT THEME
@@ -1243,9 +1245,22 @@ document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.le
 /* ── DARK MODE ── */
 const html=document.documentElement;
 const themeBtn=document.getElementById('themeBtn');
-let dark=false;
+
+// deteksi tema sistem/browser pengunjung saat pertama buka
+const prefersDarkMQ=window.matchMedia('(prefers-color-scheme: dark)');
+let dark=prefersDarkMQ.matches;
+html.setAttribute('data-theme',dark?'dark':'light');
+themeBtn.textContent=dark?'☀️':'🌙';
+
 themeBtn.addEventListener('click',()=>{
   dark=!dark;
+  html.setAttribute('data-theme',dark?'dark':'light');
+  themeBtn.textContent=dark?'☀️':'🌙';
+});
+
+// ikut update otomatis kalau pengunjung ganti tema sistem saat web masih terbuka
+prefersDarkMQ.addEventListener('change',e=>{
+  dark=e.matches;
   html.setAttribute('data-theme',dark?'dark':'light');
   themeBtn.textContent=dark?'☀️':'🌙';
 });
