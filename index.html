@@ -403,8 +403,12 @@ section{position:relative;width:100%;overflow:hidden;}
 .s2-wind-btn:hover{background:#c1440e;border-color:#c1440e;color:#fff;transform:scale(1.08);}
 .s2-wind-btn:active{transform:scale(.95);}
 .s2-wind-btn:disabled{cursor:not-allowed;opacity:.7;}
+.s2-wind-btn::before{content:"🍃";}
+[data-theme="dark"] .s2-wind-btn::before{content:"🌠";}
+[data-theme="dark"] .s2-wind-btn:hover{background:#3b3f7a;border-color:#3b3f7a;}
 .s2-wind-bar{width:64px;height:3px;border-radius:2px;background:rgba(120,120,120,.2);overflow:hidden;}
 .s2-wind-bar-fill{height:100%;width:0%;background:#c1440e;border-radius:2px;transform-origin:left;}
+[data-theme="dark"] .s2-wind-bar-fill{background:linear-gradient(to right,#8b9dc9,#e8eaf6);}
 .s2-wind-bar-fill.running{animation:windBarDown 4.5s linear forwards;}
 @keyframes windBarDown{from{width:100%;}to{width:0%;}}
 
@@ -802,6 +806,31 @@ section{position:relative;width:100%;overflow:hidden;}
   100%{opacity:0;transform:translate(var(--esx2,40px),105vh) rotate(var(--er2,200deg)) scale(.4);}
 }
 
+/* falling stars (dark mode wind effect) */
+.ee-star{
+  position:fixed;pointer-events:none;z-index:9996;
+  width:var(--ssize,3px);height:var(--ssize,3px);
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 6px 1px rgba(255,255,255,.9),0 0 12px 2px rgba(180,200,255,.5);
+  animation:eeStarFall var(--edur,1.6s) linear forwards;
+}
+.ee-star::after{
+  content:"";
+  position:absolute;
+  top:50%;right:50%;
+  width:var(--trail,70px);height:1.5px;
+  background:linear-gradient(to left,rgba(255,255,255,.85),rgba(255,255,255,0));
+  transform:translateY(-50%) rotate(var(--sang,20deg));
+  transform-origin:right center;
+}
+@keyframes eeStarFall{
+  0%  {opacity:0;transform:translate(0,-10vh);}
+  8%  {opacity:1;}
+  85% {opacity:1;}
+  100%{opacity:0;transform:translate(var(--sdx,40vw),105vh);}
+}
+
 /* ── MUSIC TOAST ── */
 .music-toast{
   position:fixed;bottom:1.5rem;right:1.5rem;
@@ -997,7 +1026,7 @@ section{position:relative;width:100%;overflow:hidden;}
   <div class="s2-inner">
     <p class="s2-face">ᵔᴥᵔ</p>
     <div class="s2-wind-wrap">
-      <button class="s2-wind-btn" id="windBtn" onclick="showWindEffect()" title="Tiup angin" aria-label="Tiup angin">🍃</button>
+      <button class="s2-wind-btn" id="windBtn" onclick="showWindEffect()" title="Tiup angin" aria-label="Tiup angin"></button>
       <div class="s2-wind-bar"><div class="s2-wind-bar-fill" id="windBarFill"></div></div>
     </div>
   </div>
@@ -1356,6 +1385,36 @@ function spawnEasterClouds(){
   });
 }
 
+function spawnEasterStars(){
+  const count=45;
+  const vw=window.innerWidth;
+  const vh=window.innerHeight;
+  const dxRatio=0.32;
+  const dyPx=1.10*vh;
+  const dxPxFixed=dxRatio*vw;
+  const angle=Math.atan2(dyPx,dxPxFixed)*180/Math.PI;
+  for(let i=0;i<count;i++){
+    setTimeout(()=>{
+      const s=document.createElement('div');
+      s.classList.add('ee-star');
+      const left=Math.random()*100;
+      const dur=1.1+Math.random()*1.1;
+      const size=1.5+Math.random()*2.5;
+      const trail=40+Math.random()*70;
+      const dxVw=dxRatio*100;
+      s.style.left=left+'%';
+      s.style.top='-5vh';
+      s.style.setProperty('--edur',dur+'s');
+      s.style.setProperty('--ssize',size+'px');
+      s.style.setProperty('--trail',trail+'px');
+      s.style.setProperty('--sang',angle+'deg');
+      s.style.setProperty('--sdx',dxVw+'vw');
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(),(dur+.3)*1000);
+    },i*55);
+  }
+}
+
 /* ── WIND EFFECT (daun + awan) ── */
 function showWindEffect(){
   if(eeActive)return;
@@ -1371,8 +1430,13 @@ function showWindEffect(){
   barFill.style.width='100%';
   barFill.classList.add('running');
 
-  spawnEasterLeaves();
-  spawnEasterClouds();
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  if(isDark){
+    spawnEasterStars();
+  }else{
+    spawnEasterLeaves();
+    spawnEasterClouds();
+  }
 
   setTimeout(()=>{
     overlay.classList.remove('active');
