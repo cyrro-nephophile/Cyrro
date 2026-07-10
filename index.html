@@ -91,6 +91,24 @@ body{
   100%{opacity:0;transform:translate(var(--sx3),var(--fall)) rotate(var(--r3)) scale(.5);}
 }
 
+.tap-star{
+  position:fixed;pointer-events:none;z-index:9995;
+  border-radius:50%;background:#e8f76b;
+  box-shadow:0 0 6px 2px rgba(232,247,107,.9),0 0 14px 4px rgba(180,255,120,.5);
+  animation:fireflyDrift var(--dur,2s) ease-in-out forwards;
+}
+@keyframes fireflyDrift{
+  0%   {opacity:0;transform:translate(0,0) scale(.6);}
+  8%   {opacity:1;transform:translate(calc(var(--sx) * .3),calc(var(--fy1) * -.6)) scale(.9);}
+  20%  {opacity:.9;transform:translate(var(--sx),calc(var(--fy1) * -1)) scale(1);}
+  35%  {opacity:.6;transform:translate(var(--sx2),var(--fy2)) scale(.85);}
+  50%  {opacity:.85;transform:translate(var(--sx3),calc(var(--fy1) * -.7)) scale(.95);}
+  65%  {opacity:.5;transform:translate(var(--sx4),var(--fy3)) scale(.75);}
+  78%  {opacity:.8;transform:translate(var(--sx5),calc(var(--fy2) * -.8)) scale(.65);}
+  90%  {opacity:.5;transform:translate(var(--sx6),calc(var(--fy3) * .8)) scale(.4);}
+  100% {opacity:0;transform:translate(calc(var(--sx6) * 1.15),calc(var(--fy3) * 1.1)) scale(.2);}
+}
+
 /* ── GRAIN ── */
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");pointer-events:none;z-index:9990;}
 
@@ -1285,30 +1303,53 @@ function tryAutoplay(){
 document.addEventListener('click',tryAutoplay,{once:true});
 document.addEventListener('touchstart',tryAutoplay,{once:true,passive:true});
 
-/* ── FALLING LEAVES ── */
+/* ── FALLING LEAVES / TAP FIREFLIES ── */
 const LV=['🍃','🌿','🍀','🌱','🍂','🌾'];
 function spawnLeaves(x,y){
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
   for(let i=0;i<4;i++){
-    const l=document.createElement('div');
-    l.classList.add('falling-leaf');
-    l.textContent=LV[Math.floor(Math.random()*LV.length)];
-    const dur=1.2+Math.random()*.8;
-    const fall=160+Math.random()*200;
     const ox=(Math.random()-.5)*28;
+    const l=document.createElement('div');
     l.style.left=(x+ox)+'px';l.style.top=y+'px';
-    l.style.setProperty('--dur',dur+'s');
-    l.style.setProperty('--fall',fall+'px');
-    l.style.setProperty('--sx',(Math.random()-.5)*60+'px');
-    l.style.setProperty('--sx2',(Math.random()-.5)*80+'px');
-    l.style.setProperty('--sx3',(Math.random()-.5)*50+'px');
-    l.style.setProperty('--r0',(Math.random()-.5)*40+'deg');
-    l.style.setProperty('--r1',(Math.random()-.5)*120+'deg');
-    l.style.setProperty('--r2',(Math.random()-.5)*200+'deg');
-    l.style.setProperty('--r3',(Math.random()-.5)*300+'deg');
-    l.style.fontSize=(.8+Math.random()*.8)+'rem';
     l.style.animationDelay=(Math.random()*.12)+'s';
-    document.body.appendChild(l);
-    setTimeout(()=>l.remove(),(dur+.3)*1000);
+
+    if(isDark){
+      const dur=2;
+      const dir=Math.random()<.5?1:-1;
+      l.classList.add('tap-star');
+      const size=2.5+Math.random()*3;
+      l.style.width=size+'px';
+      l.style.height=size+'px';
+      l.style.setProperty('--dur',dur+'s');
+      l.style.setProperty('--sx',(dir*(20+Math.random()*15))+'px');
+      l.style.setProperty('--sx2',(dir*(30+Math.random()*20))+'px');
+      l.style.setProperty('--sx3',(dir*(45+Math.random()*20))+'px');
+      l.style.setProperty('--sx4',(dir*(35+Math.random()*25))+'px');
+      l.style.setProperty('--sx5',(dir*(55+Math.random()*25))+'px');
+      l.style.setProperty('--sx6',(dir*(65+Math.random()*30))+'px');
+      l.style.setProperty('--fy1',(12+Math.random()*10)+'px');
+      l.style.setProperty('--fy2',(8+Math.random()*8)+'px');
+      l.style.setProperty('--fy3',(20+Math.random()*15)+'px');
+      document.body.appendChild(l);
+      setTimeout(()=>l.remove(),(dur+.3)*1000);
+    }else{
+      const dur=1.2+Math.random()*.8;
+      const fall=160+Math.random()*200;
+      l.classList.add('falling-leaf');
+      l.textContent=LV[Math.floor(Math.random()*LV.length)];
+      l.style.setProperty('--dur',dur+'s');
+      l.style.setProperty('--fall',fall+'px');
+      l.style.setProperty('--sx',(Math.random()-.5)*60+'px');
+      l.style.setProperty('--sx2',(Math.random()-.5)*80+'px');
+      l.style.setProperty('--sx3',(Math.random()-.5)*50+'px');
+      l.style.setProperty('--r0',(Math.random()-.5)*40+'deg');
+      l.style.setProperty('--r1',(Math.random()-.5)*120+'deg');
+      l.style.setProperty('--r2',(Math.random()-.5)*200+'deg');
+      l.style.setProperty('--r3',(Math.random()-.5)*300+'deg');
+      l.style.fontSize=(.8+Math.random()*.8)+'rem';
+      document.body.appendChild(l);
+      setTimeout(()=>l.remove(),(dur+.3)*1000);
+    }
   }
 }
 document.addEventListener('click',e=>{
