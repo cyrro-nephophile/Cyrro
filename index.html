@@ -612,7 +612,7 @@ section{position:relative;width:100%;overflow:hidden;}
 /* ── Now Playing — Last.fm ── */
 .np-card{
   display:flex;align-items:center;gap:.8rem;
-  margin-top:1.2rem;
+  margin-top:1.2rem;width:100%;box-sizing:border-box;
   background:rgba(217,70,160,.07);
   border:1px solid rgba(217,70,160,.2);
   border-radius:12px;padding:.85rem;
@@ -653,30 +653,32 @@ section{position:relative;width:100%;overflow:hidden;}
   0%,100%{box-shadow:0 0 0 3px rgba(217,70,160,.22),0 0 10px rgba(217,70,160,.22);}
   50%{box-shadow:0 0 0 3px rgba(217,70,160,.4),0 0 18px rgba(217,70,160,.45);}
 }
-.np-body{flex:1;min-width:0;}
+.np-body{flex:1;min-width:0;max-width:100%;overflow:hidden;}
 .np-status{
   display:flex;align-items:center;gap:.35rem;
   font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;
   color:#d946a0;font-family:'Outfit',sans-serif;font-weight:500;margin-bottom:.25rem;
+  white-space:nowrap;overflow:hidden;
 }
+.np-status span#npStatusText{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 [data-theme="dark"] .np-status{color:#e879c7;}
 .np-dot{width:6px;height:6px;border-radius:50%;background:#d946a0;flex-shrink:0;}
 [data-theme="dark"] .np-dot{background:#e879c7;}
 .np-status.np-live .np-dot{display:none;}
 .np-eq{display:none;align-items:flex-end;gap:2px;height:9px;flex-shrink:0;}
 .np-status.np-live .np-eq{display:flex;}
-.np-eq span{width:2.5px;background:#d946a0;border-radius:1px;animation:npEq 1s ease-in-out infinite;}
+.np-eq span{width:2.5px;background:#d946a0;border-radius:1px;animation:npEq 1s ease-in-out infinite;flex-shrink:0;}
 [data-theme="dark"] .np-eq span{background:#e879c7;}
 .np-eq span:nth-child(1){height:40%;animation-delay:-0.4s;}
 .np-eq span:nth-child(2){height:100%;animation-delay:-0.2s;}
 .np-eq span:nth-child(3){height:65%;animation-delay:0s;}
 @keyframes npEq{0%,100%{transform:scaleY(.35);}50%{transform:scaleY(1);}}
-.np-track,.np-artist{transition:opacity .3s ease;}
+.np-track,.np-artist{transition:opacity .3s ease;max-width:100%;}
 .np-fade-out{opacity:0;}
 .np-track{font-size:.75rem;font-weight:500;color:var(--text-head);line-height:1.35;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
 .np-artist{font-size:.65rem;color:var(--text-muted);margin-top:.1rem;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
 .np-shimmer{
   height:.7rem;border-radius:4px;margin-bottom:.3rem;width:70%;
   background:linear-gradient(110deg,rgba(217,70,160,.1) 30%,rgba(217,70,160,.22) 50%,rgba(217,70,160,.1) 70%);
