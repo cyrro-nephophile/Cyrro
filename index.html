@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Cyrro — Nephophile</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@200;300;400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body,body *{transition:background-color .4s ease,color .4s ease,border-color .4s ease;}
@@ -212,11 +212,11 @@ nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(16px);box-shadow:0 1p
 .mobile-menu.open ul li a{
   animation:menuItemUp .6s cubic-bezier(.16,1,.3,1) forwards;
 }
-.mobile-menu.open ul li:nth-child(1) a{animation-delay:.12s;}
-.mobile-menu.open ul li:nth-child(2) a{animation-delay:.18s;}
-.mobile-menu.open ul li:nth-child(3) a{animation-delay:.24s;}
-.mobile-menu.open ul li:nth-child(4) a{animation-delay:.30s;}
-.mobile-menu.open ul li:nth-child(5) a{animation-delay:.36s;}
+.mobile-menu.open ul li:nth-child(1) a{animation-delay:.18s;}
+.mobile-menu.open ul li:nth-child(2) a{animation-delay:.24s;}
+.mobile-menu.open ul li:nth-child(3) a{animation-delay:.30s;}
+.mobile-menu.open ul li:nth-child(4) a{animation-delay:.36s;}
+.mobile-menu.open ul li:nth-child(5) a{animation-delay:.42s;}
 @keyframes menuItemUp{
   to{opacity:1;transform:translateY(0);}
 }
@@ -225,9 +225,53 @@ nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(16px);box-shadow:0 1p
   display:flex;gap:.8rem;margin-top:2rem;
   opacity:0;transform:translateY(20px);
 }
+.mm-calendar{
+  display:flex;flex-direction:column;gap:.7rem;
+  padding:1rem 1.1rem 1.1rem;border-radius:16px;
+  background:rgba(224,123,57,.07);
+  border:1px solid rgba(224,123,57,.18);
+  margin-bottom:1.8rem;width:100%;max-width:300px;
+  opacity:0;transform:translateY(20px);
+}
+.mobile-menu.open .mm-calendar{
+  animation:menuItemUp .6s cubic-bezier(.16,1,.3,1) forwards;
+  animation-delay:.06s;
+}
+[data-theme="dark"] .mm-calendar{background:rgba(251,146,60,.06);border-color:rgba(251,146,60,.18);}
+.mm-cal-head{display:flex;align-items:flex-start;justify-content:space-between;}
+.mm-cal-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:1.05rem;letter-spacing:.01em;color:var(--text-head);}
+[data-theme="dark"] .mm-cal-title{color:#dde5f5;}
+.mm-cal-clock{
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;font-size:.7rem;
+  color:var(--accent-2);letter-spacing:.02em;font-variant-numeric:tabular-nums;
+  margin-top:1px;
+}
+.mm-cal-nav{display:flex;gap:.3rem;}
+.mm-cal-nav button{
+  width:26px;height:26px;border-radius:50%;border:none;
+  background:transparent;color:var(--text-soft);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:.9rem;transition:background .2s;
+}
+.mm-cal-nav button:hover{background:rgba(224,123,57,.14);color:var(--accent-2);}
+[data-theme="dark"] .mm-cal-nav button:hover{background:rgba(251,146,60,.14);}
+.mm-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.15rem;}
+.mm-cal-dow{
+  font-size:.62rem;text-align:center;color:var(--text-muted);
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;letter-spacing:.03em;
+  padding-bottom:.3rem;
+}
+.mm-cal-cell{
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-size:.78rem;color:var(--text-body);font-family:'Plus Jakarta Sans',sans-serif;font-weight:400;
+  border-radius:50%;
+}
+.mm-cal-cell.mm-cal-muted{color:var(--text-muted);opacity:.4;}
+.mm-cal-cell.mm-cal-today{background:var(--accent-2);color:#fff;font-weight:600;}
+
 .mobile-menu.open .mobile-menu-socials{
   animation:menuItemUp .6s cubic-bezier(.16,1,.3,1) forwards;
-  animation-delay:.42s;
+  animation-delay:.48s;
 }
 .mms-icon{
   width:38px;height:38px;border-radius:50%;
@@ -1142,6 +1186,19 @@ section{position:relative;width:100%;overflow:hidden;}
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
+  <div class="mm-calendar" id="mmCalendar">
+    <div class="mm-cal-head">
+      <div>
+        <span class="mm-cal-title" id="mmCalTitle">Januari 2026</span>
+        <div class="mm-cal-clock" id="mmCalClock">00:00:00</div>
+      </div>
+      <div class="mm-cal-nav">
+        <button type="button" id="mmCalPrev" aria-label="Bulan sebelumnya">‹</button>
+        <button type="button" id="mmCalNext" aria-label="Bulan berikutnya">›</button>
+      </div>
+    </div>
+    <div class="mm-cal-grid" id="mmCalGrid"></div>
+  </div>
   <ul>
     <li><a href="#s1" onclick="closeMenu()">Home</a></li>
     <li><a href="#s3" onclick="closeMenu()">Hobbies</a></li>
@@ -1206,7 +1263,7 @@ section{position:relative;width:100%;overflow:hidden;}
 <!-- ══ S2 INTRO ══ -->
 <section id="s2">
   <div class="s2-inner">
-    <p class="s2-face">ᵔᴥᵔ</p>
+    <p class="s2-face">⌐ᴥ⌐</p>
     <div class="s2-wind-wrap">
       <button class="s2-wind-btn" id="windBtn" onclick="showWindEffect()" title="Tiup angin" aria-label="Tiup angin"></button>
       <div class="s2-wind-bar"><div class="s2-wind-bar-fill" id="windBarFill"></div></div>
@@ -1661,6 +1718,84 @@ function spawnEasterStars(){
   }
 }
 
+/* ── MOBILE MENU CALENDAR (real-time) ── */
+(function(){
+  const elTitle=document.getElementById('mmCalTitle');
+  const elClock=document.getElementById('mmCalClock');
+  const elGrid=document.getElementById('mmCalGrid');
+  const btnPrev=document.getElementById('mmCalPrev');
+  const btnNext=document.getElementById('mmCalNext');
+  if(!elGrid)return;
+
+  const months=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const dows=['S','M','T','W','T','F','S'];
+
+  const today=new Date();
+  let viewYear=today.getFullYear();
+  let viewMonth=today.getMonth();
+
+  function render(){
+    elTitle.textContent=`${months[viewMonth]} ${viewYear}`;
+    elGrid.innerHTML='';
+
+    dows.forEach(d=>{
+      const el=document.createElement('div');
+      el.className='mm-cal-dow';
+      el.textContent=d;
+      elGrid.appendChild(el);
+    });
+
+    const firstDay=new Date(viewYear,viewMonth,1).getDay();
+    const daysInMonth=new Date(viewYear,viewMonth+1,0).getDate();
+    const daysInPrevMonth=new Date(viewYear,viewMonth,0).getDate();
+
+    for(let i=firstDay-1;i>=0;i--){
+      const el=document.createElement('div');
+      el.className='mm-cal-cell mm-cal-muted';
+      el.textContent=daysInPrevMonth-i;
+      elGrid.appendChild(el);
+    }
+
+    for(let d=1;d<=daysInMonth;d++){
+      const el=document.createElement('div');
+      el.className='mm-cal-cell';
+      if(d===today.getDate()&&viewMonth===today.getMonth()&&viewYear===today.getFullYear()){
+        el.classList.add('mm-cal-today');
+      }
+      el.textContent=d;
+      elGrid.appendChild(el);
+    }
+
+    const totalCells=firstDay+daysInMonth;
+    const remaining=(7-(totalCells%7))%7;
+    for(let d=1;d<=remaining;d++){
+      const el=document.createElement('div');
+      el.className='mm-cal-cell mm-cal-muted';
+      el.textContent=d;
+      elGrid.appendChild(el);
+    }
+  }
+
+  btnPrev.addEventListener('click',()=>{
+    viewMonth--;
+    if(viewMonth<0){viewMonth=11;viewYear--;}
+    render();
+  });
+  btnNext.addEventListener('click',()=>{
+    viewMonth++;
+    if(viewMonth>11){viewMonth=0;viewYear++;}
+    render();
+  });
+
+  function updateClock(){
+    elClock.textContent=new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  }
+  updateClock();
+  setInterval(updateClock,1000);
+
+  render();
+})();
+
 /* ── WIND EFFECT (daun + awan) ── */
 function showWindEffect(){
   if(eeActive)return;
@@ -1668,6 +1803,7 @@ function showWindEffect(){
   const overlay=document.getElementById('easterOverlay');
   const btn=document.getElementById('windBtn');
   const barFill=document.getElementById('windBarFill');
+  const face=document.querySelector('.s2-face');
 
   overlay.classList.add('active');
   btn.disabled=true;
@@ -1675,6 +1811,7 @@ function showWindEffect(){
   void barFill.offsetWidth;
   barFill.style.width='100%';
   barFill.classList.add('running');
+  setTimeout(()=>{ if(face)face.textContent='ᴖᴥᴖ'; },1500);
 
   const isDark=document.documentElement.getAttribute('data-theme')==='dark';
   if(isDark){
@@ -1689,6 +1826,7 @@ function showWindEffect(){
     btn.disabled=false;
     barFill.classList.remove('running');
     barFill.style.width='0%';
+    if(face)face.textContent='⌐ᴥ⌐';
     eeActive=false;
   },4500);
 }
@@ -1731,10 +1869,30 @@ document.addEventListener('keydown',e=>{
 const hamburger=document.getElementById('hamburger');
 const mobileMenu=document.getElementById('mobileMenu');
 const menuOverlay=document.getElementById('menuOverlay');
+let scrollLockY=0;
+
+function lockBodyScroll(){
+  scrollLockY=window.scrollY;
+  document.body.style.position='fixed';
+  document.body.style.top=`-${scrollLockY}px`;
+  document.body.style.left='0';
+  document.body.style.right='0';
+  document.body.style.width='100%';
+}
+function unlockBodyScroll(){
+  document.body.style.position='';
+  document.body.style.top='';
+  document.body.style.left='';
+  document.body.style.right='';
+  document.body.style.width='';
+  window.scrollTo(0,scrollLockY);
+}
+
 function closeMenu(){
   hamburger.classList.remove('open');
   mobileMenu.classList.remove('open');
   menuOverlay.classList.remove('show');
+  unlockBodyScroll();
 }
 hamburger.addEventListener('click',()=>{
   const opening=!mobileMenu.classList.contains('open');
@@ -1746,9 +1904,19 @@ hamburger.addEventListener('click',()=>{
       void a.offsetWidth;
       a.style.animation='';
     });
+    lockBodyScroll();
+  }else{
+    unlockBodyScroll();
   }
   mobileMenu.classList.toggle('open');
 });
+
+/* cegah gesture di menu nembus ke halaman belakang */
+mobileMenu.addEventListener('touchmove',(e)=>{
+  if(!e.target.closest('.mm-cal-grid')){
+    e.preventDefault();
+  }
+},{passive:false});
 
 /* ── QUOTE ── */
 const QUOTE="Waktu Itu Berharga, Lakukan Hal Yang Ingin Kamu Lakukan";
