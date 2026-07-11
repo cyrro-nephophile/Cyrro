@@ -186,7 +186,9 @@ nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(16px);box-shadow:0 1p
 
 /* mobile menu */
 .mobile-menu{
-  position:fixed;top:0;left:0;right:0;width:100%;height:auto;
+  position:fixed;top:0;left:0;right:0;width:100%;
+  max-height:100vh;max-height:100dvh;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
   transform:translateY(-100%);
   visibility:hidden;
   background:#ffffff;
@@ -1910,13 +1912,6 @@ hamburger.addEventListener('click',()=>{
   }
   mobileMenu.classList.toggle('open');
 });
-
-/* cegah gesture di menu nembus ke halaman belakang */
-mobileMenu.addEventListener('touchmove',(e)=>{
-  if(!e.target.closest('.mm-cal-grid')){
-    e.preventDefault();
-  }
-},{passive:false});
 
 /* ── QUOTE ── */
 const QUOTE="Waktu Itu Berharga, Lakukan Hal Yang Ingin Kamu Lakukan";
