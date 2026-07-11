@@ -547,6 +547,15 @@ section{position:relative;width:100%;overflow:hidden;}
 .wv-frame{
   position:relative;width:100%;aspect-ratio:16/9;
   border-radius:8px;overflow:hidden;background:#000;
+  border:2px solid transparent;transition:border-color .4s,box-shadow .4s;
+}
+.wv-frame.wv-playing{
+  border-color:#e0273d;
+  box-shadow:0 0 18px rgba(224,39,61,.35);
+}
+[data-theme="dark"] .wv-frame.wv-playing{
+  border-color:#60a5fa;
+  box-shadow:0 0 18px rgba(96,165,250,.35);
 }
 .wv-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
 .wv-frame .wv-skel{
@@ -568,6 +577,14 @@ section{position:relative;width:100%;overflow:hidden;}
 .wv-title{font-size:.75rem;font-weight:500;color:var(--text-head);line-height:1.4;}
 .wv-title.wv-loading{color:var(--text-muted);font-style:italic;font-weight:400;}
 .wv-date{font-size:.62rem;color:var(--text-muted);margin-top:.2rem;font-style:italic;}
+.wv-shimmer{
+  height:.7rem;border-radius:4px;margin-bottom:.35rem;
+  background:linear-gradient(110deg,rgba(45,158,107,.1) 30%,rgba(45,158,107,.22) 50%,rgba(45,158,107,.1) 70%);
+  background-size:200% 100%;animation:wvShimmer 1.4s infinite;
+}
+.wv-shimmer:last-child{margin-bottom:0;}
+.wv-shimmer.wv-shimmer-sm{width:55%;height:.5rem;}
+[data-theme="dark"] .wv-shimmer{background:linear-gradient(110deg,rgba(74,222,128,.07) 30%,rgba(74,222,128,.16) 50%,rgba(74,222,128,.07) 70%);background-size:200% 100%;}
 .wv-btn{
   display:inline-flex;align-items:center;gap:.3rem;
   padding:.35rem .85rem;border-radius:8px;
@@ -1152,12 +1169,14 @@ section{position:relative;width:100%;overflow:hidden;}
           </div>
           <div class="wv-meta">
             <span class="wv-badge">Video Terbaru</span>
-            <div class="wv-info">
-              <div class="wv-title wv-loading" id="wvTitle">Mengambil video terbaru dari Windah Basudara…</div>
-              <div class="wv-date" id="wvDate"></div>
+            <div class="wv-info" id="wvInfo">
+              <div class="wv-shimmer" id="wvShimmerTitle"></div>
+              <div class="wv-shimmer wv-shimmer-sm" id="wvShimmerDate"></div>
+              <div class="wv-title" id="wvTitle" style="display:none"></div>
+              <div class="wv-date" id="wvDate" style="display:none"></div>
             </div>
           </div>
-          <a class="wv-btn" id="wvBtn" href="https://www.youtube.com/@WindahBasudara" target="_blank" rel="noopener">Buka di YouTube ↗</a>
+          <a class="wv-btn" id="wvBtn" href="https://www.youtube.com/@WindahBasudara" target="_blank" rel="noopener"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg>Buka di YouTube</a>
         </div>
       </div>
     </div>
@@ -1672,6 +1691,8 @@ window.addEventListener('scroll',()=>{
   const elTitle=document.getElementById('wvTitle');
   const elDate=document.getElementById('wvDate');
   const elBtn=document.getElementById('wvBtn');
+  const elShimmerTitle=document.getElementById('wvShimmerTitle');
+  const elShimmerDate=document.getElementById('wvShimmerDate');
   if(!elFrame)return;
 
   function fmtDate(iso){
@@ -1680,18 +1701,28 @@ window.addEventListener('scroll',()=>{
     }catch(e){return '';}
   }
 
+  function showLoaded(){
+    if(elShimmerTitle)elShimmerTitle.style.display='none';
+    if(elShimmerDate)elShimmerDate.style.display='none';
+    elTitle.style.display='';
+    elDate.style.display='';
+  }
+
   function render(video){
     elFrame.innerHTML=`<iframe src="https://www.youtube.com/embed/${video.id}" title="${video.title.replace(/"/g,'&quot;')}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
     elTitle.textContent=video.title;
-    elTitle.classList.remove('wv-loading');
     elDate.textContent=video.publishedAt?fmtDate(video.publishedAt):'';
     elBtn.href=`https://www.youtube.com/watch?v=${video.id}`;
+    showLoaded();
+    // Kasih efek glow border begitu area video disentuh (proxy buat "lagi diputar")
+    elFrame.addEventListener('click',()=>elFrame.classList.add('wv-playing'),{once:true});
   }
 
   function fail(msg){
     elSkel.textContent=msg||'Gagal memuat video. Coba buka langsung di YouTube.';
     elTitle.textContent='Video terbaru belum bisa dimuat';
-    elTitle.classList.remove('wv-loading');
+    elDate.textContent='';
+    showLoaded();
   }
 
   // Coba pakai cache dulu biar cepat & hemat kuota API
