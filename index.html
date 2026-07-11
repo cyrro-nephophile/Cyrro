@@ -486,7 +486,8 @@ section{position:relative;width:100%;overflow:hidden;}
   border-top:1px solid var(--card-border);
 }
 
-.sc-text{padding:2rem 3rem;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2;}
+.sc-text{padding:2rem 3rem;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2;max-width:100%;box-sizing:border-box;overflow:hidden;}
+.sc-text > *{max-width:100%;box-sizing:border-box;}
 .sc-num{
   font-family:'Playfair Display',serif;
   font-size:3.5rem;font-weight:700;
