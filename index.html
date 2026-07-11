@@ -69,7 +69,7 @@ body,body *{transition:background-color .4s ease,color .4s ease,border-color .4s
 [data-theme="dark"] body{background:var(--bg-1);}
 [data-theme="dark"] .nav-logo{color:#e8f5e9 !important;}
 
-html{scroll-behavior:smooth;}
+html{scroll-behavior:smooth;overflow-x:hidden;scrollbar-gutter:stable;}
 body{
   background:var(--bg-1);
   color:var(--text-body);
@@ -122,11 +122,89 @@ nav{
   padding:1rem 2rem;
   display:flex;justify-content:space-between;align-items:center;
   transition:background .4s,box-shadow .4s;
+  will-change:background;
+  isolation:isolate;
 }
 nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--nav-border);}
 
 .nav-left{display:flex;align-items:center;gap:1rem;}
 .nav-logo{font-family:'Playfair Display',serif;font-style:italic;font-size:1.3rem;color:var(--logo-color);letter-spacing:.04em;transition:color .3s;}
+
+/* uwu toggle button - lives inline in nav, NOT its dropdown */
+.uwu-toggle{
+  display:flex;align-items:center;gap:.3rem;
+  background:none;border:none;cursor:pointer;
+  padding:.15rem .2rem;
+}
+.uwu-arrow{
+  width:7px;height:7px;
+  border-right:1.5px solid var(--logo-color);
+  border-bottom:1.5px solid var(--logo-color);
+  transform:rotate(45deg);
+  margin-top:-3px;
+  transition:transform .25s ease,border-color .3s ease;
+}
+.uwu-toggle.open .uwu-arrow{transform:rotate(225deg);margin-top:3px;}
+.uwu-toggle:hover .uwu-arrow{border-color:var(--accent-2);}
+[data-theme="dark"] .uwu-arrow{border-color:#e8f5e9;}
+
+/* uwu dropdown - detached from nav entirely, positioned via JS, fixed to viewport */
+#uwuMenu{
+  position:fixed;
+  min-width:220px;
+  background:var(--nav-bg);backdrop-filter:blur(16px);
+  border:1px solid var(--nav-border);border-radius:14px;
+  box-shadow:0 14px 34px rgba(0,0,0,.18);
+  padding:.9rem;
+  opacity:0;visibility:hidden;transform:translateY(-8px) scale(.97);
+  transition:opacity .22s ease,transform .22s ease,visibility 0s linear .22s;
+  z-index:9997;
+  pointer-events:none;
+}
+#uwuMenu.open{
+  opacity:1;visibility:visible;transform:translateY(0) scale(1);
+  transition:opacity .22s ease,transform .22s ease,visibility 0s;
+  pointer-events:auto;
+}
+.uwu-menu-head{
+  display:flex;align-items:center;gap:.5rem;
+  margin-bottom:.15rem;
+}
+.uwu-menu-icon{
+  font-size:1.1rem;line-height:1;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.15));
+}
+.uwu-menu-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:.8rem;padding:.3rem .1rem;border-radius:8px;
+}
+.uwu-menu-label{
+  font-family:'Outfit',sans-serif;font-weight:500;font-size:.85rem;
+  color:var(--text-body);letter-spacing:.01em;
+}
+.uwu-menu-sub{
+  font-family:'Outfit',sans-serif;font-weight:300;font-size:.68rem;
+  color:var(--text-soft);letter-spacing:.01em;
+  margin-top:.15rem;margin-bottom:.6rem;
+  padding-left:1.6rem;
+  line-height:1.35;
+}
+.uwu-switch{
+  position:relative;width:38px;height:22px;flex-shrink:0;
+  border-radius:999px;border:none;cursor:pointer;
+  background:var(--card-border);
+  transition:background .3s ease;
+}
+.uwu-switch::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:18px;height:18px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.28);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.uwu-switch.on{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));}
+.uwu-switch.on::after{transform:translateX(16px);}
+.uwu-switch:active::after{width:21px;}
+
 
 /* theme toggle */
 .theme-btn{
@@ -174,9 +252,12 @@ nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(16px);box-shadow:0 1p
 .hamburger{
   display:flex;flex-direction:column;justify-content:center;
   gap:5px;width:36px;height:36px;
+  min-width:36px;max-width:36px;
+  flex-shrink:0;flex-grow:0;
   background:var(--card-bg);backdrop-filter:blur(8px);
   border:1.5px solid var(--card-border);border-radius:8px;
-  cursor:pointer;padding:0 8px;transition:all .3s;
+  cursor:pointer;padding:0 8px;
+  transition:border-color .3s;
 }
 .hamburger:hover{border-color:var(--accent-1);}
 .hamburger span{display:block;height:1.5px;background:var(--text-soft);border-radius:2px;transition:all .35s;}
@@ -205,11 +286,12 @@ nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(16px);box-shadow:0 1p
   line-height:1.25;display:block;
   opacity:0;transform:translateY(100%);
   transition:color .25s;
+  -webkit-tap-highlight-color:rgba(224,123,57,.25);
 }
-.mobile-menu ul li a:hover{color:var(--accent-1);}
+.mobile-menu ul li a:hover{color:var(--accent-2);}
 [data-theme="dark"] .mobile-menu{background:#0a0e1a;box-shadow:0 10px 40px rgba(0,0,0,.5);}
 [data-theme="dark"] .mobile-menu ul li a{color:#f1f1f1 !important;}
-[data-theme="dark"] .mobile-menu ul li a:hover{color:var(--accent-1) !important;}
+[data-theme="dark"] .mobile-menu ul li a:hover{color:var(--accent-2) !important;}
 
 .mobile-menu.open ul li a{
   animation:menuItemUp .6s cubic-bezier(.16,1,.3,1) forwards;
@@ -231,7 +313,6 @@ nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(16px);box-shadow:0 1p
   display:flex;flex-direction:column;gap:.7rem;
   padding:1rem 1.1rem 1.1rem;border-radius:16px;
   background:rgba(224,123,57,.07);
-  border:1px solid rgba(224,123,57,.18);
   margin-bottom:1.8rem;width:100%;max-width:300px;
   opacity:0;transform:translateY(20px);
 }
@@ -239,7 +320,7 @@ nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(16px);box-shadow:0 1p
   animation:menuItemUp .6s cubic-bezier(.16,1,.3,1) forwards;
   animation-delay:.06s;
 }
-[data-theme="dark"] .mm-calendar{background:rgba(251,146,60,.06);border-color:rgba(251,146,60,.18);}
+[data-theme="dark"] .mm-calendar{background:rgba(251,146,60,.06);}
 .mm-cal-head{display:flex;align-items:flex-start;justify-content:space-between;}
 .mm-cal-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:1.05rem;letter-spacing:.01em;color:var(--text-head);}
 [data-theme="dark"] .mm-cal-title{color:#dde5f5;}
@@ -368,6 +449,7 @@ section{position:relative;width:100%;overflow:hidden;}
   color:#111111;
   opacity:0;transform:translateY(30px);
   animation:fadeUp .9s .45s forwards;
+  max-width:100%;overflow-wrap:break-word;word-break:break-word;
 }
 [data-theme="dark"] .h-name{color:#e8f5e9;}
 
@@ -1174,7 +1256,10 @@ section{position:relative;width:100%;overflow:hidden;}
 <!-- NAV -->
 <nav id="nav">
   <div class="nav-left">
-    <div class="nav-logo">cyrro</div>
+    <button class="uwu-toggle" id="uwuToggle" title="Menu">
+      <span class="nav-logo">cyrro</span>
+      <span class="uwu-arrow"></span>
+    </button>
     <button class="theme-btn" id="themeBtn" title="Ganti tema">🌙</button>
     <div class="music-wrap">
       <button class="music-btn" id="musicBtn" title="Musik">🎵</button>
@@ -1185,6 +1270,18 @@ section{position:relative;width:100%;overflow:hidden;}
     <span></span><span></span><span></span>
   </button>
 </nav>
+
+<!-- UWU DROPDOWN - sengaja di luar <nav>, posisi dihitung via JS, supaya tidak pernah mempengaruhi layout nav -->
+<div id="uwuMenu">
+  <div class="uwu-menu-row">
+    <div class="uwu-menu-head">
+      <span class="uwu-menu-icon">🐾</span>
+      <span class="uwu-menu-label">Mode UwU</span>
+    </div>
+    <button class="uwu-switch" id="uwuSwitch" aria-label="Toggle mode UwU"></button>
+  </div>
+  <div class="uwu-menu-sub">Ubah seluruh teks jadi versi imut~ nyaa</div>
+</div>
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
@@ -1202,11 +1299,11 @@ section{position:relative;width:100%;overflow:hidden;}
     <div class="mm-cal-grid" id="mmCalGrid"></div>
   </div>
   <ul>
-    <li><a href="#s1" onclick="closeMenu(true)">Home</a></li>
-    <li><a href="#s3" onclick="closeMenu(true)">Hobbies</a></li>
-    <li><a href="#s4" onclick="closeMenu(true)">Games</a></li>
-    <li><a href="#s5" onclick="closeMenu(true)">Quote</a></li>
-    <li><a href="#s6" onclick="closeMenu(true)">Contact</a></li>
+    <li><a href="#s1" onclick="return goToSection(event,'s1')">Home</a></li>
+    <li><a href="#s3" onclick="return goToSection(event,'s3')">Hobbies</a></li>
+    <li><a href="#s4" onclick="return goToSection(event,'s4')">Games</a></li>
+    <li><a href="#s5" onclick="return goToSection(event,'s5')">Quote</a></li>
+    <li><a href="#s6" onclick="return goToSection(event,'s6')">Contact</a></li>
   </ul>
   <div class="mobile-menu-socials">
     <a class="mms-icon" href="https://bsky.app/profile/cyrro.my.id" target="_blank" rel="noopener" title="Bluesky">
@@ -1329,7 +1426,7 @@ section{position:relative;width:100%;overflow:hidden;}
       <div class="sc-text">
         <div class="sc-num">04</div>
         <div class="sc-icon">📺</div>
-        <div class="sc-name">Windah Basudara</div>
+        <div class="sc-name" id="windahName">Windah Basudara</div>
         <div class="sc-desc">Favorite YouTuber sejak lama. Kontennya selalu bikin ngakak sekaligus relate — dari gaming sampai hal random yang entah kenapa selalu seru ditonton.</div>
         <div class="wv-card" id="wvCard">
           <div class="wv-frame" id="wvFrame">
@@ -1813,7 +1910,7 @@ function showWindEffect(){
   void barFill.offsetWidth;
   barFill.style.width='100%';
   barFill.classList.add('running');
-  setTimeout(()=>{ if(face)face.textContent='ᴖᴥᴖ'; },1500);
+  setTimeout(()=>{ if(face)face.textContent='ᴖᴥᴖ'; },1200);
 
   const isDark=document.documentElement.getAttribute('data-theme')==='dark';
   if(isDark){
@@ -1895,6 +1992,21 @@ function closeMenu(navigating){
   mobileMenu.classList.remove('open');
   menuOverlay.classList.remove('show');
   unlockBodyScroll(!navigating);
+}
+
+function goToSection(e,id){
+  if(e)e.preventDefault();
+  const target=document.getElementById(id);
+  closeMenu(true);
+  // tunggu body kelar di-unlock (position:fixed dilepas) baru scroll,
+  // biar scrollIntoView gak nembak duluan pas transisi masih jalan
+  setTimeout(()=>{
+    if(target){
+      target.scrollIntoView({behavior:'smooth',block:'start'});
+      history.pushState(null,'','#'+id);
+    }
+  },50);
+  return false;
 }
 hamburger.addEventListener('click',()=>{
   const opening=!mobileMenu.classList.contains('open');
@@ -2188,6 +2300,161 @@ window.addEventListener('scroll',()=>{
 
   fetchNowPlaying();
   setInterval(fetchNowPlaying,POLL_INTERVAL);
+})();
+
+/* ── UwU MODE ── */
+(function(){
+  const toggleBtn=document.getElementById('uwuToggle');
+  const menu=document.getElementById('uwuMenu');
+  const uwuSwitch=document.getElementById('uwuSwitch');
+  if(!toggleBtn||!menu||!uwuSwitch)return;
+
+  // elemen/container yang TIDAK boleh disentuh (data faktual / nama header / API luar)
+  const EXCLUDE_SELECTOR='#npCard, #wvCard, #mmCalClock, #mmCalGrid, .uwu-toggle, #uwuMenu, .gcard-id-val, nav, script, style, noscript, textarea, input';
+
+  // nama plesetan buat "Windah Basudara" — dipilih acak tiap mode UwU diaktifkan
+  const WINDAH_NAMES=['Windah Habatusauda','Windah Barusadar','Windah Batubara','Windah Berusaha','Sarwindah'];
+  const windahEl=document.getElementById('windahName');
+  let windahOriginal=windahEl?windahEl.textContent:'';
+
+  const origMap=new WeakMap();
+  let active=false;
+  let observer=null;
+  let menuOpen=false;
+
+  const faces=[' (｡>﹏<｡)',' owo',' UwU',' 🐾',' (⁠.⁠❛⁠ᴗ⁠❛⁠.⁠)',' nyaa~',' ✨',' >w<',' (⁠๑⁠•⁠﹏⁠•⁠)',' 💕'];
+  function pickFace(seed){return faces[Math.abs(seed) % faces.length];}
+
+  function uwuify(text,seed){
+    if(!text||!text.trim())return text;
+    let out=text
+      .replace(/r/g,'w').replace(/l/g,'w')
+      .replace(/R/g,'W').replace(/L/g,'W');
+    out=out.replace(/(^|\.\s+|\!\s+|\?\s+)([A-Za-z])/g,(m,pre,ch)=>{
+      return Math.random()<0.35 ? pre+ch+'-'+ch.toLowerCase() : pre+ch;
+    });
+    if(text.trim().length>4 && Math.random()<0.85){
+      out=out+pickFace(seed+Math.floor(Math.random()*faces.length));
+    }
+    return out;
+  }
+
+  function isExcluded(node){
+    let el=node.parentElement;
+    while(el){
+      if(el.matches && el.matches(EXCLUDE_SELECTOR))return true;
+      el=el.parentElement;
+    }
+    return false;
+  }
+
+  function walkTextNodes(root,cb){
+    const tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{
+      acceptNode(node){
+        if(!node.nodeValue || !node.nodeValue.trim())return NodeFilter.FILTER_REJECT;
+        if(isExcluded(node))return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    let n;
+    while(n=tw.nextNode())cb(n);
+  }
+
+  function applyUwu(){
+    let i=0;
+    walkTextNodes(document.body,(node)=>{
+      if(!origMap.has(node))origMap.set(node,node.nodeValue);
+      node.nodeValue=uwuify(origMap.get(node),i++);
+    });
+    if(windahEl){
+      const pick=WINDAH_NAMES[Math.floor(Math.random()*WINDAH_NAMES.length)];
+      windahEl.textContent=pick;
+    }
+  }
+
+  function restoreOriginal(){
+    walkTextNodes(document.body,(node)=>{
+      if(origMap.has(node))node.nodeValue=origMap.get(node);
+    });
+    if(windahEl)windahEl.textContent=windahOriginal;
+  }
+
+  function startObserving(){
+    observer=new MutationObserver((mutations)=>{
+      if(!active)return;
+      for(const m of mutations){
+        m.addedNodes.forEach(n=>{
+          if(n.nodeType===Node.TEXT_NODE){
+            if(!isExcluded(n) && n.nodeValue.trim()){
+              if(!origMap.has(n))origMap.set(n,n.nodeValue);
+              n.nodeValue=uwuify(origMap.get(n),Math.floor(Math.random()*99));
+            }
+          }else if(n.nodeType===Node.ELEMENT_NODE){
+            walkTextNodes(n,(tn)=>{
+              if(!origMap.has(tn))origMap.set(tn,tn.nodeValue);
+              tn.nodeValue=uwuify(origMap.get(tn),Math.floor(Math.random()*99));
+            });
+          }
+        });
+      }
+    });
+    observer.observe(document.body,{childList:true,subtree:true});
+  }
+
+  function stopObserving(){
+    if(observer){observer.disconnect();observer=null;}
+  }
+
+  function setActive(val){
+    active=val;
+    uwuSwitch.classList.toggle('on',active);
+    if(active){
+      applyUwu();
+      startObserving();
+    }else{
+      stopObserving();
+      restoreOriginal();
+    }
+  }
+
+  // posisi dropdown dihitung manual dari lokasi tombol di viewport —
+  // TIDAK bergantung pada CSS relatif ke nav, jadi tidak bisa mempengaruhi layout nav
+  function positionMenu(){
+    const r=toggleBtn.getBoundingClientRect();
+    menu.style.top=(r.bottom+10)+'px';
+    menu.style.left=r.left+'px';
+  }
+
+  function openMenu(){
+    positionMenu();
+    menu.classList.add('open');
+    toggleBtn.classList.add('open');
+    menuOpen=true;
+  }
+  function closeMenu(){
+    menu.classList.remove('open');
+    toggleBtn.classList.remove('open');
+    menuOpen=false;
+  }
+
+  toggleBtn.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    menuOpen?closeMenu():openMenu();
+  });
+
+  uwuSwitch.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    setActive(!active);
+  });
+
+  document.addEventListener('click',(e)=>{
+    if(menuOpen && !menu.contains(e.target) && !toggleBtn.contains(e.target)){
+      closeMenu();
+    }
+  });
+
+  window.addEventListener('resize',()=>{if(menuOpen)positionMenu();});
+  window.addEventListener('scroll',()=>{if(menuOpen)positionMenu();},{passive:true});
 })();
 </script>
 </body>
