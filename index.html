@@ -609,6 +609,91 @@ section{position:relative;width:100%;overflow:hidden;}
 }
 [data-theme="dark"] .wv-btn:hover{box-shadow:0 5px 14px rgba(96,165,250,.38);}
 
+/* ── Now Playing — Last.fm ── */
+.np-card{
+  display:flex;align-items:center;gap:.8rem;
+  margin-top:1.2rem;
+  background:rgba(217,70,160,.07);
+  border:1px solid rgba(217,70,160,.2);
+  border-radius:12px;padding:.85rem;
+  position:relative;overflow:hidden;
+  transition:border-color .4s;
+}
+[data-theme="dark"] .np-card{background:rgba(232,121,199,.07);border-color:rgba(232,121,199,.18);}
+.np-card.np-is-live{border-color:rgba(217,70,160,.4);}
+[data-theme="dark"] .np-card.np-is-live{border-color:rgba(232,121,199,.35);}
+.np-card.np-is-live::before{
+  content:'';position:absolute;inset:0;pointer-events:none;border-radius:12px;
+  background:linear-gradient(90deg,transparent,rgba(217,70,160,.5),transparent);
+  background-size:200% 100%;animation:npBorderShimmer 2.6s linear infinite;
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;padding:1px;
+}
+[data-theme="dark"] .np-card.np-is-live::before{background:linear-gradient(90deg,transparent,rgba(232,121,199,.5),transparent);background-size:200% 100%;}
+@keyframes npBorderShimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.np-art{
+  width:52px;height:52px;flex-shrink:0;border-radius:8px;
+  background:linear-gradient(135deg,rgba(217,70,160,.18),rgba(217,70,160,.35));
+  object-fit:cover;transition:box-shadow .4s;
+}
+.np-art-fallback{
+  width:52px;height:52px;flex-shrink:0;border-radius:8px;
+  background:linear-gradient(135deg,rgba(217,70,160,.18),rgba(217,70,160,.35));
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  transition:box-shadow .4s;
+}
+.np-is-live .np-art,.np-is-live .np-art-fallback{
+  box-shadow:0 0 0 3px rgba(217,70,160,.3),0 0 14px rgba(217,70,160,.35);
+  animation:npArtGlow 2.2s ease-in-out infinite;
+}
+[data-theme="dark"] .np-is-live .np-art,[data-theme="dark"] .np-is-live .np-art-fallback{
+  box-shadow:0 0 0 3px rgba(232,121,199,.28),0 0 14px rgba(232,121,199,.32);
+}
+@keyframes npArtGlow{
+  0%,100%{box-shadow:0 0 0 3px rgba(217,70,160,.22),0 0 10px rgba(217,70,160,.22);}
+  50%{box-shadow:0 0 0 3px rgba(217,70,160,.4),0 0 18px rgba(217,70,160,.45);}
+}
+.np-body{flex:1;min-width:0;}
+.np-status{
+  display:flex;align-items:center;gap:.35rem;
+  font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;
+  color:#d946a0;font-family:'Outfit',sans-serif;font-weight:500;margin-bottom:.25rem;
+}
+[data-theme="dark"] .np-status{color:#e879c7;}
+.np-dot{width:6px;height:6px;border-radius:50%;background:#d946a0;flex-shrink:0;}
+[data-theme="dark"] .np-dot{background:#e879c7;}
+.np-status.np-live .np-dot{display:none;}
+.np-eq{display:none;align-items:flex-end;gap:2px;height:9px;flex-shrink:0;}
+.np-status.np-live .np-eq{display:flex;}
+.np-eq span{width:2.5px;background:#d946a0;border-radius:1px;animation:npEq 1s ease-in-out infinite;}
+[data-theme="dark"] .np-eq span{background:#e879c7;}
+.np-eq span:nth-child(1){height:40%;animation-delay:-0.4s;}
+.np-eq span:nth-child(2){height:100%;animation-delay:-0.2s;}
+.np-eq span:nth-child(3){height:65%;animation-delay:0s;}
+@keyframes npEq{0%,100%{transform:scaleY(.35);}50%{transform:scaleY(1);}}
+.np-track,.np-artist{transition:opacity .3s ease;}
+.np-fade-out{opacity:0;}
+.np-track{font-size:.75rem;font-weight:500;color:var(--text-head);line-height:1.35;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.np-artist{font-size:.65rem;color:var(--text-muted);margin-top:.1rem;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.np-shimmer{
+  height:.7rem;border-radius:4px;margin-bottom:.3rem;width:70%;
+  background:linear-gradient(110deg,rgba(217,70,160,.1) 30%,rgba(217,70,160,.22) 50%,rgba(217,70,160,.1) 70%);
+  background-size:200% 100%;animation:wvShimmer 1.4s infinite;
+}
+.np-shimmer.np-shimmer-sm{width:45%;height:.55rem;}
+[data-theme="dark"] .np-shimmer{background:linear-gradient(110deg,rgba(232,121,199,.08) 30%,rgba(232,121,199,.18) 50%,rgba(232,121,199,.08) 70%);background-size:200% 100%;}
+.np-play{
+  flex-shrink:0;width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#d946a0,#b5308a);color:#fff;
+  text-decoration:none;transition:transform .2s,box-shadow .25s;
+  box-shadow:0 3px 8px rgba(217,70,160,.3);
+}
+.np-play:hover{transform:scale(1.08);box-shadow:0 5px 12px rgba(217,70,160,.42);}
+[data-theme="dark"] .np-play{background:linear-gradient(135deg,#e879c7,#c454a3);box-shadow:0 3px 8px rgba(232,121,199,.28);}
+
 /* ══════════════════════
    S4 — GAMES
 ══════════════════════ */
@@ -1155,6 +1240,19 @@ section{position:relative;width:100%;overflow:hidden;}
         <div class="sc-icon">🎵</div>
         <div class="sc-name">Musik</div>
         <div class="sc-desc">Playlist yang tepat bisa mengubah suasana hati dalam sekejap. Dari yang chill sampai yang bikin semangat — musik selalu jadi teman setia.</div>
+        <div class="np-card" id="npCard">
+          <div class="np-art-fallback" id="npArtFallback">🎧</div>
+          <div class="np-body">
+            <div class="np-shimmer" id="npShimmerStatus"></div>
+            <div class="np-shimmer np-shimmer-sm" id="npShimmerArtist"></div>
+            <div class="np-status" id="npStatus" style="display:none"><span class="np-dot"></span><span class="np-eq"><span></span><span></span><span></span></span><span id="npStatusText"></span></div>
+            <div class="np-track" id="npTrack" style="display:none"></div>
+            <div class="np-artist" id="npArtist" style="display:none"></div>
+          </div>
+          <a class="np-play" id="npPlay" href="https://music.youtube.com" target="_blank" rel="noopener" title="Buka di YouTube Music" style="display:none">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.5 14.5v-9l7 4.5-7 4.5z"/></svg>
+          </a>
+        </div>
       </div>
     </div>
     <div class="scroll-card">
@@ -1799,6 +1897,130 @@ window.addEventListener('scroll',()=>{
         else{fail();}
       }catch(e){fail();}
     });
+})();
+
+/* ── NOW PLAYING — Last.fm ── */
+(function(){
+  const LASTFM_API_KEY='5634d5ed1ef232807efd15bdef4e1c06';
+  const LASTFM_USER='Cyrro2021';
+  const POLL_INTERVAL=30000; // 30 detik
+
+  const elCard=document.getElementById('npCard');
+  const elArtFallback=document.getElementById('npArtFallback');
+  const elShimmerStatus=document.getElementById('npShimmerStatus');
+  const elShimmerArtist=document.getElementById('npShimmerArtist');
+  const elStatus=document.getElementById('npStatus');
+  const elStatusText=document.getElementById('npStatusText');
+  const elTrack=document.getElementById('npTrack');
+  const elArtist=document.getElementById('npArtist');
+  const elPlay=document.getElementById('npPlay');
+  if(!elCard)return;
+
+  let currentArt=null;
+  let currentTrackKey=null;
+
+  function showLoaded(){
+    elShimmerStatus.style.display='none';
+    elShimmerArtist.style.display='none';
+    elStatus.style.display='';
+    elTrack.style.display='';
+    elArtist.style.display='';
+    if(elPlay)elPlay.style.display='';
+  }
+
+  function setArt(url){
+    if(url===currentArt)return;
+    currentArt=url;
+    if(url){
+      elCard.querySelector('.np-art-fallback,.np-art')?.remove();
+      const img=document.createElement('img');
+      img.className='np-art';
+      img.src=url;
+      img.alt='Album art';
+      img.onerror=()=>{img.replaceWith(makeFallback());};
+      elCard.prepend(img);
+    }else{
+      elCard.querySelector('.np-art-fallback,.np-art')?.replaceWith(makeFallback());
+    }
+  }
+
+  function makeFallback(){
+    const d=document.createElement('div');
+    d.className='np-art-fallback';
+    d.id='npArtFallback';
+    d.textContent='🎧';
+    return d;
+  }
+
+  function applyTrackText(track,isNowPlaying){
+    elStatusText.textContent=isNowPlaying?'Now Playing':'Terakhir didengar';
+    elStatus.classList.toggle('np-live',!!isNowPlaying);
+    elCard.classList.toggle('np-is-live',!!isNowPlaying);
+    elTrack.textContent=track.name;
+    elArtist.textContent=track.artist;
+    const img=track.image&&track.image.find(i=>i.size==='large'&&i['#text']);
+    setArt(img?img['#text']:null);
+    if(elPlay){
+      const q=encodeURIComponent(`${track.name} ${track.artist}`.trim());
+      elPlay.href=`https://music.youtube.com/search?q=${q}`;
+    }
+    showLoaded();
+  }
+
+  function render(track,isNowPlaying){
+    const key=track.name+'|'+track.artist+'|'+isNowPlaying;
+    if(key===currentTrackKey){
+      // Data sama persis, nggak perlu re-render/fade
+      return;
+    }
+    const isFirstRender=currentTrackKey===null;
+    currentTrackKey=key;
+    if(isFirstRender){
+      applyTrackText(track,isNowPlaying);
+      return;
+    }
+    // Fade out, ganti teks, fade in — biar transisi pas ganti lagu halus
+    elTrack.classList.add('np-fade-out');
+    elArtist.classList.add('np-fade-out');
+    setTimeout(()=>{
+      applyTrackText(track,isNowPlaying);
+      elTrack.classList.remove('np-fade-out');
+      elArtist.classList.remove('np-fade-out');
+    },300);
+  }
+
+  function fail(){
+    elStatusText.textContent='Belum ada data';
+    elStatus.classList.remove('np-live');
+    elCard.classList.remove('np-is-live');
+    elTrack.textContent='Belum ada riwayat musik';
+    elArtist.textContent='';
+    showLoaded();
+  }
+
+  function fetchNowPlaying(){
+    const url=`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USER}&api_key=${LASTFM_API_KEY}&format=json&limit=1`;
+    fetch(url)
+      .then(r=>{if(!r.ok)throw new Error('Lastfm API error '+r.status);return r.json();})
+      .then(data=>{
+        const t=data.recenttracks && data.recenttracks.track && data.recenttracks.track[0];
+        const track=Array.isArray(data.recenttracks?.track)?data.recenttracks.track[0]:data.recenttracks?.track;
+        if(!track)throw new Error('Tidak ada data track');
+        const isNowPlaying=track['@attr'] && track['@attr'].nowplaying==='true';
+        render({
+          name:track.name,
+          artist:track.artist && (track.artist['#text']||track.artist.name)||'',
+          image:track.image
+        },isNowPlaying);
+      })
+      .catch(err=>{
+        console.warn('Last.fm now playing fetch failed:',err);
+        fail();
+      });
+  }
+
+  fetchNowPlaying();
+  setInterval(fetchNowPlaying,POLL_INTERVAL);
 })();
 </script>
 </body>
