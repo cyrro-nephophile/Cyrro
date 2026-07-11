@@ -2006,13 +2006,14 @@ window.addEventListener('scroll',()=>{
     fetch(url)
       .then(r=>{if(!r.ok)throw new Error('Lastfm API error '+r.status);return r.json();})
       .then(data=>{
-        const t=data.recenttracks && data.recenttracks.track && data.recenttracks.track[0];
-        const track=Array.isArray(data.recenttracks?.track)?data.recenttracks.track[0]:data.recenttracks?.track;
-        if(!track)throw new Error('Tidak ada data track');
-        const isNowPlaying=track['@attr'] && track['@attr'].nowplaying==='true';
+        if(data.error){throw new Error('Lastfm API error code '+data.error+': '+data.message);}
+        const rawTrack=data.recenttracks && data.recenttracks.track;
+        const track=Array.isArray(rawTrack)?rawTrack[0]:rawTrack;
+        if(!track||!track.name){throw new Error('Tidak ada data track pada response');}
+        const isNowPlaying=!!(track['@attr'] && track['@attr'].nowplaying==='true');
         render({
           name:track.name,
-          artist:track.artist && (track.artist['#text']||track.artist.name)||'',
+          artist:(track.artist && (track.artist['#text']||track.artist.name))||'',
           image:track.image
         },isNowPlaying);
       })
