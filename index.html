@@ -1202,11 +1202,11 @@ section{position:relative;width:100%;overflow:hidden;}
     <div class="mm-cal-grid" id="mmCalGrid"></div>
   </div>
   <ul>
-    <li><a href="#s1" onclick="closeMenu()">Home</a></li>
-    <li><a href="#s3" onclick="closeMenu()">Hobbies</a></li>
-    <li><a href="#s4" onclick="closeMenu()">Games</a></li>
-    <li><a href="#s5" onclick="closeMenu()">Quote</a></li>
-    <li><a href="#s6" onclick="closeMenu()">Contact</a></li>
+    <li><a href="#s1" onclick="closeMenu(true)">Home</a></li>
+    <li><a href="#s3" onclick="closeMenu(true)">Hobbies</a></li>
+    <li><a href="#s4" onclick="closeMenu(true)">Games</a></li>
+    <li><a href="#s5" onclick="closeMenu(true)">Quote</a></li>
+    <li><a href="#s6" onclick="closeMenu(true)">Contact</a></li>
   </ul>
   <div class="mobile-menu-socials">
     <a class="mms-icon" href="https://bsky.app/profile/cyrro.my.id" target="_blank" rel="noopener" title="Bluesky">
@@ -1881,20 +1881,20 @@ function lockBodyScroll(){
   document.body.style.right='0';
   document.body.style.width='100%';
 }
-function unlockBodyScroll(){
+function unlockBodyScroll(restore=true){
   document.body.style.position='';
   document.body.style.top='';
   document.body.style.left='';
   document.body.style.right='';
   document.body.style.width='';
-  window.scrollTo(0,scrollLockY);
+  if(restore)window.scrollTo(0,scrollLockY);
 }
 
-function closeMenu(){
+function closeMenu(navigating){
   hamburger.classList.remove('open');
   mobileMenu.classList.remove('open');
   menuOverlay.classList.remove('show');
-  unlockBodyScroll();
+  unlockBodyScroll(!navigating);
 }
 hamburger.addEventListener('click',()=>{
   const opening=!mobileMenu.classList.contains('open');
