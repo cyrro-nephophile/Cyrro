@@ -127,7 +127,7 @@ nav{
 }
 nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--nav-border);}
 
-.nav-left{display:flex;align-items:center;gap:1rem;}
+.nav-left{display:flex;align-items:center;gap:1rem;min-width:0;flex:1;overflow:hidden;}
 .nav-logo{font-family:'Playfair Display',serif;font-style:italic;font-size:1.3rem;color:var(--logo-color);letter-spacing:.04em;transition:color .3s;}
 
 /* uwu toggle button - lives inline in nav, NOT its dropdown */
@@ -236,17 +236,22 @@ nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(16px);box-shadow:0 1p
 .nav-links a:hover{color:var(--accent-1);}
 
 /* music title */
-.music-wrap{display:flex;align-items:center;gap:.5rem;}
+.music-wrap{display:flex;align-items:center;gap:.5rem;min-width:0;}
 .music-title{
   font-size:.62rem;letter-spacing:.06em;
   color:#111111;
   background:rgba(255,255,255,.55);
   padding:.2rem .5rem;border-radius:6px;
-  max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:clamp(70px,20vw,110px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   opacity:0;transition:opacity .4s;
+  flex-shrink:1;min-width:0;
 }
 [data-theme="dark"] .music-title{color:#f1f1f1;background:rgba(0,0,0,.4);}
-.music-title.show{opacity:1;}
+.music-title.show{opacity:1;animation:musicTitleBlink 1.8s ease-in-out infinite;}
+@keyframes musicTitleBlink{
+  0%,100%{opacity:1;}
+  50%{opacity:.35;}
+}
 
 /* music dropdown menu */
 .music-wrap{position:relative;}
@@ -1358,7 +1363,7 @@ section{position:relative;width:100%;overflow:hidden;}
 <div class="music-toast" id="musicToast">🎵 Musik diputar</div>
 
 <!-- AUDIO -->
-<audio id="bgMusic" loop>
+<audio id="bgMusic">
   <source src="https://raw.githubusercontent.com/cyrro-gg/Cyrro/main/Assets/Ariana%20Grande%20-%20bye%20%5BAltare%20Remix%5D.mp3" type="audio/mpeg"/>
 </audio>
 
@@ -1372,7 +1377,7 @@ section{position:relative;width:100%;overflow:hidden;}
     <button class="theme-btn" id="themeBtn" title="Ganti tema">🌙</button>
     <div class="music-wrap" id="musicWrap">
       <button class="music-btn" id="musicBtn" title="Musik">🎵</button>
-      <span class="music-title" id="musicTitle">bye - Altare Remix</span>
+      <span class="music-title" id="musicTitle">Sedang memutar</span>
       <div class="music-dropdown" id="musicDropdown">
         <div class="music-dropdown-header">
           <button class="mdh-play" id="mdhPlay" title="Play/Pause">▶️</button>
@@ -1816,6 +1821,11 @@ function toggleMusic(){
   }
 }
 
+music.addEventListener('ended',()=>{
+  updatePlayUI(false);
+  showToast('🎵 Lagu selesai');
+});
+
 function selectTrack(trackEl){
   const src=trackEl.dataset.src;
   const title=trackEl.dataset.title;
@@ -1826,7 +1836,6 @@ function selectTrack(trackEl){
   musicTracks.forEach(t=>t.classList.remove('active'));
   trackEl.classList.add('active');
   currentTitle=title;
-  musicTitleEl.textContent=title;
   mdhTitle.textContent=title;
 
   const wasPlaying=playing;
