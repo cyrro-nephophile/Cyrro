@@ -248,6 +248,106 @@ nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(16px);box-shadow:0 1p
 [data-theme="dark"] .music-title{color:#f1f1f1;background:rgba(0,0,0,.4);}
 .music-title.show{opacity:1;}
 
+/* music dropdown menu */
+.music-wrap{position:relative;}
+.music-dropdown{
+  position:fixed;top:80px;left:50%;
+  transform:translate(-50%,-10px);
+  width:min(300px,88vw);
+  background:#1a1a24;
+  border:1.5px solid var(--card-border);
+  border-radius:16px;
+  padding:.6rem;
+  box-shadow:0 16px 40px rgba(0,0,0,.5);
+  opacity:0;visibility:hidden;
+  transition:opacity .25s,transform .25s,visibility .25s;
+  z-index:9999;
+}
+[data-theme="light"] .music-dropdown{background:#ffffff;}
+.music-dropdown.open{opacity:1;visibility:visible;transform:translate(-50%,0);}
+.music-dropdown-header{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.5rem .6rem;margin-bottom:.4rem;
+  border-bottom:1px solid var(--card-border);
+}
+.music-dropdown-header .mdh-play{
+  display:flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  border:1.5px solid var(--card-border);
+  background:var(--card-bg);cursor:pointer;font-size:.9rem;
+  transition:all .3s;
+}
+.music-dropdown-header .mdh-play:hover{border-color:var(--accent-2);transform:scale(1.08);}
+.music-dropdown-header .mdh-play.playing{border-color:var(--accent-2);animation:musicPulse 1.5s ease-in-out infinite;}
+.music-dropdown-header .mdh-title{
+  font-size:.72rem;letter-spacing:.03em;color:var(--text-soft);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.music-track{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.5rem .6rem;border-radius:8px;
+  cursor:pointer;font-size:.72rem;letter-spacing:.02em;
+  color:var(--text-soft);transition:background .2s,color .2s;
+}
+.music-track:hover{background:rgba(224,123,57,.12);color:var(--accent-2);}
+.music-track.active{background:rgba(224,123,57,.18);color:var(--accent-2);font-weight:600;}
+.music-track .mt-icon{font-size:.85rem;width:1.1rem;text-align:center;flex-shrink:0;}
+.music-track .mt-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.music-dropdown-footer{
+  display:flex;justify-content:center;
+  padding-top:.5rem;margin-top:.3rem;
+  border-top:1px solid var(--card-border);
+}
+.mdh-info{
+  display:flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:50%;
+  border:1.5px solid var(--card-border);
+  background:transparent;color:var(--text-soft);
+  cursor:pointer;font-size:.7rem;line-height:1;
+  transition:all .3s;
+}
+.mdh-info:hover{border-color:var(--accent-2);color:var(--accent-2);}
+
+.music-info-popup{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(.95);
+  width:min(320px,88vw);
+  background:#1a1a24;
+  border:1.5px solid var(--card-border);
+  border-radius:16px;
+  padding:1.1rem 1.2rem;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+  opacity:0;visibility:hidden;
+  transition:opacity .25s,transform .25s,visibility .25s;
+  z-index:10000;
+}
+[data-theme="light"] .music-info-popup{background:#ffffff;}
+.music-info-popup.open{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1);}
+.music-info-popup p{
+  font-size:.72rem;line-height:1.6;letter-spacing:.01em;
+  color:var(--text-soft);margin-bottom:.9rem;
+}
+.music-info-popup p strong{color:var(--accent-2);}
+.mip-close{
+  display:block;margin-left:auto;
+  padding:.4rem .9rem;border-radius:8px;
+  border:1.5px solid var(--card-border);
+  background:transparent;color:var(--text-soft);
+  cursor:pointer;font-size:.68rem;letter-spacing:.05em;
+  transition:all .3s;
+}
+.mip-close:hover{border-color:var(--accent-2);color:var(--accent-2);}
+
+.music-info-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.5);
+  opacity:0;visibility:hidden;
+  transition:opacity .25s,visibility .25s;
+  z-index:9998;
+}
+.music-info-overlay.open{opacity:1;visibility:visible;}
+
 /* hamburger */
 .hamburger{
   display:flex;flex-direction:column;justify-content:center;
@@ -991,7 +1091,7 @@ section{position:relative;width:100%;overflow:hidden;}
 
 .s6-grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:2rem;
 }
 .s6-col-title{
@@ -1006,6 +1106,20 @@ section{position:relative;width:100%;overflow:hidden;}
   text-decoration:none;transition:color .25s;
 }
 .s6-col ul li a:hover{color:#4ade80;}
+
+.s6-contrib-list li{
+  font-size:.85rem;color:rgba(255,255,255,.75);
+  line-height:1.5;
+}
+.s6-contrib-role{
+  display:block;
+  font-size:.68rem;color:rgba(255,255,255,.4);
+  letter-spacing:.01em;
+}
+
+@media (max-width:640px){
+  .s6-grid{grid-template-columns:repeat(2,1fr);}
+}
 
 .s6-bottom{
   display:flex;align-items:center;justify-content:space-between;
@@ -1256,9 +1370,35 @@ section{position:relative;width:100%;overflow:hidden;}
       <span class="uwu-arrow"></span>
     </button>
     <button class="theme-btn" id="themeBtn" title="Ganti tema">🌙</button>
-    <div class="music-wrap">
+    <div class="music-wrap" id="musicWrap">
       <button class="music-btn" id="musicBtn" title="Musik">🎵</button>
       <span class="music-title" id="musicTitle">bye - Altare Remix</span>
+      <div class="music-dropdown" id="musicDropdown">
+        <div class="music-dropdown-header">
+          <button class="mdh-play" id="mdhPlay" title="Play/Pause">▶️</button>
+          <span class="mdh-title" id="mdhTitle">bye - Altare Remix</span>
+        </div>
+        <div class="music-track active" data-src="https://raw.githubusercontent.com/cyrro-gg/Cyrro/main/Assets/Ariana%20Grande%20-%20bye%20%5BAltare%20Remix%5D.mp3" data-title="bye - Altare Remix">
+          <span class="mt-icon">🎵</span><span class="mt-name">bye - Altare Remix</span>
+        </div>
+        <div class="music-track" data-src="https://raw.githubusercontent.com/cyrro-gg/Cyrro/main/Assets/Different%20Heaven%20-%20Safe%20And%20Sound%20_%20House%20_%20NCS%20-%20Copyright%20Free%20Music.mp3" data-title="Different Heaven - Safe And Sound">
+          <span class="mt-icon">🎵</span><span class="mt-name">Different Heaven - Safe And Sound</span>
+        </div>
+        <div class="music-track" data-src="https://raw.githubusercontent.com/cyrro-gg/Cyrro/main/Assets/dj-romlos-propun-thailand-slowed-reverb-128-ytshorts.savetube.me.mp3" data-title="DJ Romlos Propun Thailand (Slowed + Reverb)">
+          <span class="mt-icon">🎵</span><span class="mt-name">DJ Romlos Propun Thailand (Slowed + Reverb)</span>
+        </div>
+        <div class="music-track" data-src="https://raw.githubusercontent.com/cyrro-gg/Cyrro/main/Assets/dj-y-que-fue-lamine-yamal-dance-indo-style-thailand-viral-tiktok-terbaru-2025-yang-kalian-cari-128-ytshorts.savetube.me.mp3" data-title="DJ Ya Que Fue Lamine Yamal (Thailand Style)">
+          <span class="mt-icon">🎵</span><span class="mt-name">DJ Ya Que Fue Lamine Yamal (Thailand Style)</span>
+        </div>
+        <div class="music-dropdown-footer">
+          <button class="mdh-info" id="mdhInfo" title="Info musik">ⓘ</button>
+        </div>
+      </div>
+      <div class="music-info-overlay" id="musicInfoOverlay"></div>
+      <div class="music-info-popup" id="musicInfoPopup">
+        <p><strong>Music Disclaimer:</strong> Seluruh audio di website ini bukan karya saya pribadi, melainkan milik para kreator aslinya. Dipasang hanya sebagai kosmetik website personal dan bersifat 100% non-komersial. Penggunaan audio telah mengikuti kebijakan re-upload dari masing-masing pemilik konten. All rights belong to their respective owners.</p>
+        <button class="mip-close" id="mipClose">Tutup</button>
+      </div>
     </div>
   </div>
   <button class="hamburger" id="hamburger" title="Menu">
@@ -1557,10 +1697,20 @@ section{position:relative;width:100%;overflow:hidden;}
           <li><a href="#s5">Quote</a></li>
         </ul>
       </div>
+
+      <div class="s6-col">
+        <div class="s6-col-title">Kontributor</div>
+        <ul class="s6-contrib-list">
+          <li>Claude <span class="s6-contrib-role">(pembangun website, editor, dan ide)</span></li>
+          <li>Meta AI <span class="s6-contrib-role">(tutorial hosting dan ide)</span></li>
+          <li>Cyrro <span class="s6-contrib-role">(sang empunya 🗿)</span></li>
+          <li>Gemini <span class="s6-contrib-role">(sedikit ide)</span></li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="s6-bottom">
-    <div class="s6-sig">© 2025 Cyrro Nephophile · dibuat dengan Claude</div>
+    <div class="s6-sig">© 2025 Cyrro Nephophile · dibuat dengan Claude (website nyeleneh 🗿)</div>
     <div class="s6-socials">
       <a class="s6-social-icon" href="https://bsky.app/profile/cyrro.my.id" target="_blank" rel="noopener" title="Bluesky">
         <svg viewBox="0 0 24 24"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.912 0 3.083 0 3.766c0 .683.375 5.594.617 6.409.806 2.712 3.669 3.633 6.31 3.332.181-.026.365-.05.554-.076-.284.045-.573.084-.865.117-3.55.401-6.716 1.887-2.57 6.652 4.554 5.223 6.249-1.121 7.145-4.412.024-.09.049-.181.073-.271.024.09.05.181.074.271.895 3.291 2.589 9.635 7.143 4.412 4.147-4.765.981-6.251-2.57-6.652a13.55 13.55 0 01-.865-.117c.189.026.373.05.554.076 2.64.301 5.504-.62 6.31-3.332.242-.815.618-5.726.618-6.409 0-.683-.14-1.854-.902-2.201-.66-.299-1.664-.62-4.301 1.24C16.046 4.747 13.087 8.686 12 10.8z"/></svg>
@@ -1614,9 +1764,23 @@ prefersDarkMQ.addEventListener('change',e=>{
 /* ── MUSIC ── */
 const music=document.getElementById('bgMusic');
 const musicBtn=document.getElementById('musicBtn');
+const musicWrap=document.getElementById('musicWrap');
+const musicDropdown=document.getElementById('musicDropdown');
+document.body.appendChild(musicDropdown); // keluar dari stacking context nav (isolation:isolate)
+const mdhInfo=document.getElementById('mdhInfo');
+const musicInfoPopup=document.getElementById('musicInfoPopup');
+const musicInfoOverlay=document.getElementById('musicInfoOverlay');
+const mipClose=document.getElementById('mipClose');
+document.body.appendChild(musicInfoOverlay);
+document.body.appendChild(musicInfoPopup);
+const musicTitleEl=document.getElementById('musicTitle');
+const mdhPlay=document.getElementById('mdhPlay');
+const mdhTitle=document.getElementById('mdhTitle');
+const musicTracks=document.querySelectorAll('.music-track');
 const toast=document.getElementById('musicToast');
 let playing=false;
 let musicStarted=false;
+let currentTitle=(musicTracks[0]&&musicTracks[0].dataset.title)||'bye - Altare Remix';
 
 function showToast(msg){
   toast.textContent=msg;
@@ -1624,39 +1788,106 @@ function showToast(msg){
   setTimeout(()=>toast.classList.remove('show'),2500);
 }
 
+function updatePlayUI(isPlaying){
+  playing=isPlaying;
+  musicBtn.textContent=isPlaying?'🔊':'🎵';
+  musicBtn.classList.toggle('playing',isPlaying);
+  mdhPlay.textContent=isPlaying?'⏸️':'▶️';
+  mdhPlay.classList.toggle('playing',isPlaying);
+  musicTitleEl.classList.toggle('show',isPlaying);
+}
+
+function playCurrent(){
+  music.play().then(()=>{
+    updatePlayUI(true);
+    showToast('🎵 '+currentTitle);
+  }).catch(()=>showToast('⚠️ Klik lagi untuk putar musik'));
+}
+
 function toggleMusic(){
   if(!playing){
-    music.volume=0.35;
-    music.play().then(()=>{
-      playing=true;
-      musicBtn.textContent='🔊';
-      musicBtn.classList.add('playing');
-      document.getElementById('musicTitle').classList.add('show');
-      showToast('🎵 bye - Altare Remix');
-    }).catch(()=>showToast('⚠️ Klik lagi untuk putar musik'));
+    music.volume=music.volume||0.35;
+    musicStarted=true;
+    playCurrent();
   } else {
     music.pause();
-    playing=false;
-    musicBtn.textContent='🎵';
-    musicBtn.classList.remove('playing');
-    document.getElementById('musicTitle').classList.remove('show');
+    updatePlayUI(false);
     showToast('⏸ Musik dijeda');
   }
 }
 
-musicBtn.addEventListener('click',toggleMusic);
+function selectTrack(trackEl){
+  const src=trackEl.dataset.src;
+  const title=trackEl.dataset.title;
+  if(!src){
+    showToast('⚠️ Link lagu belum diisi');
+    return;
+  }
+  musicTracks.forEach(t=>t.classList.remove('active'));
+  trackEl.classList.add('active');
+  currentTitle=title;
+  musicTitleEl.textContent=title;
+  mdhTitle.textContent=title;
+
+  const wasPlaying=playing;
+  music.pause();
+  music.querySelector('source').src=src;
+  music.load();
+  if(wasPlaying||!musicStarted){
+    musicStarted=true;
+    music.volume=music.volume||0.35;
+    playCurrent();
+  }
+}
+
+function openDropdown(){ musicDropdown.classList.add('open'); }
+function closeDropdown(){ musicDropdown.classList.remove('open'); }
+function toggleDropdown(e){
+  e.stopPropagation();
+  musicDropdown.classList.toggle('open');
+}
+
+musicBtn.addEventListener('click',toggleDropdown);
+mdhPlay.addEventListener('click',(e)=>{
+  e.stopPropagation();
+  toggleMusic();
+});
+document.addEventListener('click',(e)=>{
+  if(!musicWrap.contains(e.target) && !musicDropdown.contains(e.target)) closeDropdown();
+});
+window.addEventListener('scroll',closeDropdown,{passive:true});
+
+function openInfoPopup(){
+  musicInfoOverlay.classList.add('open');
+  musicInfoPopup.classList.add('open');
+}
+function closeInfoPopup(){
+  musicInfoOverlay.classList.remove('open');
+  musicInfoPopup.classList.remove('open');
+}
+mdhInfo.addEventListener('click',(e)=>{
+  e.stopPropagation();
+  openInfoPopup();
+});
+mipClose.addEventListener('click',(e)=>{
+  e.stopPropagation();
+  closeInfoPopup();
+});
+musicInfoOverlay.addEventListener('click',closeInfoPopup);
+
+musicTracks.forEach(t=>{
+  t.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    selectTrack(t);
+  });
+});
 
 // autoplay setelah interaksi pertama
 function tryAutoplay(){
   if(!musicStarted){
     musicStarted=true;
     music.volume=0.3;
-    music.play().then(()=>{
-      playing=true;
-      musicBtn.textContent='🔊';
-      musicBtn.classList.add('playing');
-      document.getElementById('musicTitle').classList.add('show');
-    }).catch(()=>{});
+    playCurrent();
   }
   document.removeEventListener('click',tryAutoplay);
   document.removeEventListener('touchstart',tryAutoplay);
