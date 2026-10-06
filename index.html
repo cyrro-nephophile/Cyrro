@@ -1466,6 +1466,55 @@ html body .scroll-card.on{box-shadow:none;border-color:var(--accent-2)}
 @media (pointer:coarse){.hp{display:none}}
 html.lite .cl,html.lite .bd,html.lite .tw,html.lite .hp,html.lite .s2-wind-btn::after,html.lite #s6::after{display:none!important}
 html.wind #sky{filter:brightness(1.12) saturate(1.35)}
+
+/* ===== V11: matahari/bulan terikat scroll ===== */
+html body #orb{transition:border-radius .9s cubic-bezier(.7,0,.2,1)!important}
+/* matahari/bulan solid (aslinya 78%/70% transparan → awan & bintang tembus) */
+html body #orb,html[data-theme=dark] body #orb{opacity:1}
+/* hierarki lapisan langit (belakang → depan): bintang → matahari/bulan → awan & burung → gunung
+   matahari di belakang awan & burung · bulan di depan bintang & di belakang awan */
+#stage .tw{z-index:1}
+#stage #orb{z-index:2}
+#stage .st,#stage .cl,#stage .bd{z-index:3}
+#stage .mtn{z-index:4}
+[data-theme=dark] body #orb{background:
+  radial-gradient(circle at 64% 36%,rgba(0,0,40,.12) 0 6%,transparent 7%),
+  radial-gradient(circle at 34% 62%,rgba(0,0,40,.10) 0 10%,transparent 11%),
+  radial-gradient(circle at 70% 72%,rgba(0,0,40,.09) 0 5%,transparent 6%),
+  radial-gradient(circle at 35% 30%,#fff,var(--o1,#8fd3ff) 62%,var(--o2,#3b6fff))}
+.lite-row{margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--nav-border)}
+html.lite .cl,html.lite .bd,html.lite .tw,html.lite .st,html.lite .hp,html.lite .s2-wind-btn::after,html.lite #s6::after{display:none!important}
+
+/* gerakan orb via scroll-timeline (jalan di compositor, menempel ke scroll) */
+@supports (animation-timeline: scroll()){
+#stage{container-type:size}
+html body #orb{animation:orbSun 1s linear both;animation-timeline:scroll(root)}
+html[data-theme=dark] body #orb{animation-name:orbMoon}
+@keyframes orbSun{0%{transform:translate3d(14.000cqw,64.000cqh,0) translate(-50%,-50%) scale(0.7000) rotate(0.00deg)}2.083%{transform:translate3d(15.500cqw,60.991cqh,0) translate(-50%,-50%) scale(0.7262) rotate(6.67deg)}4.167%{transform:translate3d(17.000cqw,57.996cqh,0) translate(-50%,-50%) scale(0.7522) rotate(13.33deg)}6.25%{transform:translate3d(18.500cqw,55.026cqh,0) translate(-50%,-50%) scale(0.7780) rotate(20.00deg)}8.333%{transform:translate3d(20.000cqw,52.094cqh,0) translate(-50%,-50%) scale(0.8035) rotate(26.67deg)}10.42%{transform:translate3d(21.500cqw,49.214cqh,0) translate(-50%,-50%) scale(0.8286) rotate(33.33deg)}12.5%{transform:translate3d(23.000cqw,46.397cqh,0) translate(-50%,-50%) scale(0.8531) rotate(40.00deg)}14.58%{transform:translate3d(24.500cqw,43.655cqh,0) translate(-50%,-50%) scale(0.8769) rotate(46.67deg)}16.67%{transform:translate3d(26.000cqw,41.000cqh,0) translate(-50%,-50%) scale(0.9000) rotate(53.33deg)}18.75%{transform:translate3d(27.500cqw,38.444cqh,0) translate(-50%,-50%) scale(0.9222) rotate(60.00deg)}20.83%{transform:translate3d(29.000cqw,35.997cqh,0) translate(-50%,-50%) scale(0.9435) rotate(66.67deg)}22.92%{transform:translate3d(30.500cqw,33.670cqh,0) translate(-50%,-50%) scale(0.9637) rotate(73.33deg)}25%{transform:translate3d(32.000cqw,31.473cqh,0) translate(-50%,-50%) scale(0.9828) rotate(80.00deg)}27.08%{transform:translate3d(33.500cqw,29.415cqh,0) translate(-50%,-50%) scale(1.0007) rotate(86.67deg)}29.17%{transform:translate3d(35.000cqw,27.506cqh,0) translate(-50%,-50%) scale(1.0173) rotate(93.33deg)}31.25%{transform:translate3d(36.500cqw,25.752cqh,0) translate(-50%,-50%) scale(1.0326) rotate(100.00deg)}33.33%{transform:translate3d(38.000cqw,24.163cqh,0) translate(-50%,-50%) scale(1.0464) rotate(106.67deg)}35.42%{transform:translate3d(39.500cqw,22.744cqh,0) translate(-50%,-50%) scale(1.0587) rotate(113.33deg)}37.5%{transform:translate3d(41.000cqw,21.502cqh,0) translate(-50%,-50%) scale(1.0696) rotate(120.00deg)}39.58%{transform:translate3d(42.500cqw,20.441cqh,0) translate(-50%,-50%) scale(1.0788) rotate(126.67deg)}41.67%{transform:translate3d(44.000cqw,19.567cqh,0) translate(-50%,-50%) scale(1.0864) rotate(133.33deg)}43.75%{transform:translate3d(45.500cqw,18.884cqh,0) translate(-50%,-50%) scale(1.0923) rotate(140.00deg)}45.83%{transform:translate3d(47.000cqw,18.394cqh,0) translate(-50%,-50%) scale(1.0966) rotate(146.67deg)}47.92%{transform:translate3d(48.500cqw,18.098cqh,0) translate(-50%,-50%) scale(1.0991) rotate(153.33deg)}50%{transform:translate3d(50.000cqw,18.000cqh,0) translate(-50%,-50%) scale(1.1000) rotate(160.00deg)}52.08%{transform:translate3d(51.500cqw,18.098cqh,0) translate(-50%,-50%) scale(1.0991) rotate(166.67deg)}54.17%{transform:translate3d(53.000cqw,18.394cqh,0) translate(-50%,-50%) scale(1.0966) rotate(173.33deg)}56.25%{transform:translate3d(54.500cqw,18.884cqh,0) translate(-50%,-50%) scale(1.0923) rotate(180.00deg)}58.33%{transform:translate3d(56.000cqw,19.567cqh,0) translate(-50%,-50%) scale(1.0864) rotate(186.67deg)}60.42%{transform:translate3d(57.500cqw,20.441cqh,0) translate(-50%,-50%) scale(1.0788) rotate(193.33deg)}62.5%{transform:translate3d(59.000cqw,21.502cqh,0) translate(-50%,-50%) scale(1.0696) rotate(200.00deg)}64.58%{transform:translate3d(60.500cqw,22.744cqh,0) translate(-50%,-50%) scale(1.0587) rotate(206.67deg)}66.67%{transform:translate3d(62.000cqw,24.163cqh,0) translate(-50%,-50%) scale(1.0464) rotate(213.33deg)}68.75%{transform:translate3d(63.500cqw,25.752cqh,0) translate(-50%,-50%) scale(1.0326) rotate(220.00deg)}70.83%{transform:translate3d(65.000cqw,27.506cqh,0) translate(-50%,-50%) scale(1.0173) rotate(226.67deg)}72.92%{transform:translate3d(66.500cqw,29.415cqh,0) translate(-50%,-50%) scale(1.0007) rotate(233.33deg)}75%{transform:translate3d(68.000cqw,31.473cqh,0) translate(-50%,-50%) scale(0.9828) rotate(240.00deg)}77.08%{transform:translate3d(69.500cqw,33.670cqh,0) translate(-50%,-50%) scale(0.9637) rotate(246.67deg)}79.17%{transform:translate3d(71.000cqw,35.997cqh,0) translate(-50%,-50%) scale(0.9435) rotate(253.33deg)}81.25%{transform:translate3d(72.500cqw,38.444cqh,0) translate(-50%,-50%) scale(0.9222) rotate(260.00deg)}83.33%{transform:translate3d(74.000cqw,41.000cqh,0) translate(-50%,-50%) scale(0.9000) rotate(266.67deg)}85.42%{transform:translate3d(75.500cqw,43.655cqh,0) translate(-50%,-50%) scale(0.8769) rotate(273.33deg)}87.5%{transform:translate3d(77.000cqw,46.397cqh,0) translate(-50%,-50%) scale(0.8531) rotate(280.00deg)}89.58%{transform:translate3d(78.500cqw,49.214cqh,0) translate(-50%,-50%) scale(0.8286) rotate(286.67deg)}91.67%{transform:translate3d(80.000cqw,52.094cqh,0) translate(-50%,-50%) scale(0.8035) rotate(293.33deg)}93.75%{transform:translate3d(81.500cqw,55.026cqh,0) translate(-50%,-50%) scale(0.7780) rotate(300.00deg)}95.83%{transform:translate3d(83.000cqw,57.996cqh,0) translate(-50%,-50%) scale(0.7522) rotate(306.67deg)}97.92%{transform:translate3d(84.500cqw,60.991cqh,0) translate(-50%,-50%) scale(0.7262) rotate(313.33deg)}100%{transform:translate3d(86.000cqw,64.000cqh,0) translate(-50%,-50%) scale(0.7000) rotate(320.00deg)}}@keyframes orbMoon{0%{transform:translate3d(14.000cqw,64.000cqh,0) translate(-50%,-50%) scale(0.7000) rotate(0.00deg)}2.083%{transform:translate3d(15.500cqw,60.991cqh,0) translate(-50%,-50%) scale(0.7262) rotate(0.83deg)}4.167%{transform:translate3d(17.000cqw,57.996cqh,0) translate(-50%,-50%) scale(0.7522) rotate(1.67deg)}6.25%{transform:translate3d(18.500cqw,55.026cqh,0) translate(-50%,-50%) scale(0.7780) rotate(2.50deg)}8.333%{transform:translate3d(20.000cqw,52.094cqh,0) translate(-50%,-50%) scale(0.8035) rotate(3.33deg)}10.42%{transform:translate3d(21.500cqw,49.214cqh,0) translate(-50%,-50%) scale(0.8286) rotate(4.17deg)}12.5%{transform:translate3d(23.000cqw,46.397cqh,0) translate(-50%,-50%) scale(0.8531) rotate(5.00deg)}14.58%{transform:translate3d(24.500cqw,43.655cqh,0) translate(-50%,-50%) scale(0.8769) rotate(5.83deg)}16.67%{transform:translate3d(26.000cqw,41.000cqh,0) translate(-50%,-50%) scale(0.9000) rotate(6.67deg)}18.75%{transform:translate3d(27.500cqw,38.444cqh,0) translate(-50%,-50%) scale(0.9222) rotate(7.50deg)}20.83%{transform:translate3d(29.000cqw,35.997cqh,0) translate(-50%,-50%) scale(0.9435) rotate(8.33deg)}22.92%{transform:translate3d(30.500cqw,33.670cqh,0) translate(-50%,-50%) scale(0.9637) rotate(9.17deg)}25%{transform:translate3d(32.000cqw,31.473cqh,0) translate(-50%,-50%) scale(0.9828) rotate(10.00deg)}27.08%{transform:translate3d(33.500cqw,29.415cqh,0) translate(-50%,-50%) scale(1.0007) rotate(10.83deg)}29.17%{transform:translate3d(35.000cqw,27.506cqh,0) translate(-50%,-50%) scale(1.0173) rotate(11.67deg)}31.25%{transform:translate3d(36.500cqw,25.752cqh,0) translate(-50%,-50%) scale(1.0326) rotate(12.50deg)}33.33%{transform:translate3d(38.000cqw,24.163cqh,0) translate(-50%,-50%) scale(1.0464) rotate(13.33deg)}35.42%{transform:translate3d(39.500cqw,22.744cqh,0) translate(-50%,-50%) scale(1.0587) rotate(14.17deg)}37.5%{transform:translate3d(41.000cqw,21.502cqh,0) translate(-50%,-50%) scale(1.0696) rotate(15.00deg)}39.58%{transform:translate3d(42.500cqw,20.441cqh,0) translate(-50%,-50%) scale(1.0788) rotate(15.83deg)}41.67%{transform:translate3d(44.000cqw,19.567cqh,0) translate(-50%,-50%) scale(1.0864) rotate(16.67deg)}43.75%{transform:translate3d(45.500cqw,18.884cqh,0) translate(-50%,-50%) scale(1.0923) rotate(17.50deg)}45.83%{transform:translate3d(47.000cqw,18.394cqh,0) translate(-50%,-50%) scale(1.0966) rotate(18.33deg)}47.92%{transform:translate3d(48.500cqw,18.098cqh,0) translate(-50%,-50%) scale(1.0991) rotate(19.17deg)}50%{transform:translate3d(50.000cqw,18.000cqh,0) translate(-50%,-50%) scale(1.1000) rotate(20.00deg)}52.08%{transform:translate3d(51.500cqw,18.098cqh,0) translate(-50%,-50%) scale(1.0991) rotate(20.83deg)}54.17%{transform:translate3d(53.000cqw,18.394cqh,0) translate(-50%,-50%) scale(1.0966) rotate(21.67deg)}56.25%{transform:translate3d(54.500cqw,18.884cqh,0) translate(-50%,-50%) scale(1.0923) rotate(22.50deg)}58.33%{transform:translate3d(56.000cqw,19.567cqh,0) translate(-50%,-50%) scale(1.0864) rotate(23.33deg)}60.42%{transform:translate3d(57.500cqw,20.441cqh,0) translate(-50%,-50%) scale(1.0788) rotate(24.17deg)}62.5%{transform:translate3d(59.000cqw,21.502cqh,0) translate(-50%,-50%) scale(1.0696) rotate(25.00deg)}64.58%{transform:translate3d(60.500cqw,22.744cqh,0) translate(-50%,-50%) scale(1.0587) rotate(25.83deg)}66.67%{transform:translate3d(62.000cqw,24.163cqh,0) translate(-50%,-50%) scale(1.0464) rotate(26.67deg)}68.75%{transform:translate3d(63.500cqw,25.752cqh,0) translate(-50%,-50%) scale(1.0326) rotate(27.50deg)}70.83%{transform:translate3d(65.000cqw,27.506cqh,0) translate(-50%,-50%) scale(1.0173) rotate(28.33deg)}72.92%{transform:translate3d(66.500cqw,29.415cqh,0) translate(-50%,-50%) scale(1.0007) rotate(29.17deg)}75%{transform:translate3d(68.000cqw,31.473cqh,0) translate(-50%,-50%) scale(0.9828) rotate(30.00deg)}77.08%{transform:translate3d(69.500cqw,33.670cqh,0) translate(-50%,-50%) scale(0.9637) rotate(30.83deg)}79.17%{transform:translate3d(71.000cqw,35.997cqh,0) translate(-50%,-50%) scale(0.9435) rotate(31.67deg)}81.25%{transform:translate3d(72.500cqw,38.444cqh,0) translate(-50%,-50%) scale(0.9222) rotate(32.50deg)}83.33%{transform:translate3d(74.000cqw,41.000cqh,0) translate(-50%,-50%) scale(0.9000) rotate(33.33deg)}85.42%{transform:translate3d(75.500cqw,43.655cqh,0) translate(-50%,-50%) scale(0.8769) rotate(34.17deg)}87.5%{transform:translate3d(77.000cqw,46.397cqh,0) translate(-50%,-50%) scale(0.8531) rotate(35.00deg)}89.58%{transform:translate3d(78.500cqw,49.214cqh,0) translate(-50%,-50%) scale(0.8286) rotate(35.83deg)}91.67%{transform:translate3d(80.000cqw,52.094cqh,0) translate(-50%,-50%) scale(0.8035) rotate(36.67deg)}93.75%{transform:translate3d(81.500cqw,55.026cqh,0) translate(-50%,-50%) scale(0.7780) rotate(37.50deg)}95.83%{transform:translate3d(83.000cqw,57.996cqh,0) translate(-50%,-50%) scale(0.7522) rotate(38.33deg)}97.92%{transform:translate3d(84.500cqw,60.991cqh,0) translate(-50%,-50%) scale(0.7262) rotate(39.17deg)}100%{transform:translate3d(86.000cqw,64.000cqh,0) translate(-50%,-50%) scale(0.7000) rotate(40.00deg)}}
+}
+/* langit: layer yang sudah lewat tetap solid di bawah, layer berikutnya memudar di atasnya → tidak luntur ke warna dasar saat transisi */
+html #sky i.k0{opacity:1}
+html[data-ph="2"] #sky i.k1,html[data-ph="3"] #sky i.k1,html[data-ph="4"] #sky i.k1,html[data-ph="5"] #sky i.k1{opacity:1}
+html[data-ph="3"] #sky i.k2,html[data-ph="4"] #sky i.k2,html[data-ph="5"] #sky i.k2{opacity:1}
+html[data-ph="4"] #sky i.k3,html[data-ph="5"] #sky i.k3{opacity:1}
+/* mode gelap: Home=senja Maghrib · Things I love=malam · Games=tengah malam · Quote=subuh */
+html[data-theme=dark] #sky .k0{background:linear-gradient(180deg,#1c1a46,#c05a45)}
+html[data-theme=dark] #sky .k1{background:linear-gradient(180deg,#0b1a4a,#21468c)}
+html[data-theme=dark] #sky .k2{background:linear-gradient(180deg,#000103,#05080f)}
+html[data-theme=dark] #sky .k3{background:linear-gradient(180deg,#1b2050,#b0609a)}
+/* perpindahan fase langit lebih cepat supaya terasa */
+#sky i{transition:opacity 1s ease}
+/* bintang: sedikit saat Maghrib, paling banyak tengah malam, memudar saat subuh */
+html[data-theme=dark] #sky::after{transition:opacity 1.6s ease}
+html[data-theme=dark]:not([data-ph]) #sky::after,html[data-theme=dark][data-ph="0"] #sky::after,html[data-theme=dark][data-ph="1"] #sky::after{opacity:.2}
+html[data-theme=dark][data-ph="3"] #sky::after{opacity:.9}
+html[data-theme=dark][data-ph="4"] #sky::after,html[data-theme=dark][data-ph="5"] #sky::after{opacity:.4}
+/* latar (langit+gunung) dikunci setinggi layar maksimum → tidak ada celah di bawah saat bar alamat HP naik/turun */
+@supports (height:100lvh){#stage{bottom:auto;height:100lvh}}
+/* saat ganti tema: matikan transisi per-elemen & jeda animasi hiasan */
+html.theme-swap *,html.theme-swap *::before,html.theme-swap *::after{transition:none!important}
+html.theme-swap :is(.cl,.bd,.bd path,.tw,.hp,.sc-icon,.scroll-card){animation-play-state:paused!important}
+html.theme-swap .scroll-card::before,html.theme-swap .scroll-card::after,html.theme-swap .s2-wind-btn::after,html.theme-swap #s6::after{animation-play-state:paused!important}
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Instrument+Sans:wght@400;500;600&display=swap">
 </head>
@@ -1501,6 +1550,16 @@ html.wind #sky{filter:brightness(1.12) saturate(1.35)}
     <button class="uwu-switch" id="uwuSwitch" aria-label="Toggle mode UwU"></button>
   </div>
   <div class="uwu-menu-sub">Ubah seluruh teks jadi versi imut~ nyaa</div>
+  <div class="lite-row">
+    <div class="uwu-menu-row">
+      <div class="uwu-menu-head">
+        <span class="uwu-menu-icon">🍃</span>
+        <span class="uwu-menu-label">Mode Ringan</span>
+      </div>
+      <button class="uwu-switch" id="liteSwitch" aria-label="Toggle mode ringan"></button>
+    </div>
+    <div class="uwu-menu-sub">Matikan awan, burung &amp; animasi hiasan biar lebih mulus</div>
+  </div>
 </div>
 
 <!-- MOBILE MENU -->
@@ -2614,12 +2673,127 @@ if(b&&o)b.addEventListener('click',()=>{const r=document.createElement('i');r.cl
 const root=document.documentElement,eo=document.getElementById('easterOverlay');
 if(eo)new MutationObserver(()=>root.classList.toggle('wind',eo.classList.contains('active'))).observe(eo,{attributes:true,attributeFilter:['class']});
 // mode ringan otomatis kalau perangkat terasa berat
-try{if(localStorage.getItem('lite')==='1')root.classList.add('lite')}catch(e){}
+try{localStorage.removeItem('lite')}catch(e){}
 let last=0,n=0,bad=0,run=false,tm=0;
 function mon(t){if(last){const d=t-last;if(d<200){n++;if(d>26)bad++}}last=t;
-  if(n>=60){if(bad/n>.3){root.classList.add('lite');try{localStorage.setItem('lite','1')}catch(e){}}n=bad=0}
+  if(n>=60){/* deteksi otomatis mode ringan dimatikan */n=bad=0}
   if(run)requestAnimationFrame(mon);else last=0}
 addEventListener('scroll',()=>{if(root.classList.contains('lite'))return;if(!run){run=true;requestAnimationFrame(mon)}clearTimeout(tm);tm=setTimeout(()=>{run=false},300)},{passive:true});
+})();
+</script>
+<script>
+/* ===== Toggle Mode Ringan (default MATI) ===== */
+(function(){
+const root=document.documentElement,sw=document.getElementById('liteSwitch');
+if(!sw)return;
+let saved=null;try{saved=localStorage.getItem('liteMode2')}catch(e){}
+root.classList.toggle('lite',saved==='1');
+const sync=()=>sw.classList.toggle('on',root.classList.contains('lite'));
+sync();
+sw.addEventListener('click',e=>{
+  e.stopPropagation();
+  const on=!root.classList.contains('lite');
+  root.classList.toggle('lite',on);sync();
+  try{localStorage.setItem('liteMode2',on?'1':'0')}catch(err){}
+});
+})();
+</script>
+<script>
+/* ===== SCROLLYTELLING: matahari (light) / bulan (dark) mengikuti scroll ===== */
+(function(){
+const root=document.documentElement,
+      orb=document.getElementById('orb'),
+      stage=document.getElementById('stage');
+if(!orb||!stage)return;
+
+// terbit emas → siang kuning → sore jingga → senja merah-ungu
+const SUN =[[0,'#ffb347','#ff7a59'],[.3,'#ffe27a','#ffb347'],[.55,'#ffb347','#ff7a59'],[.8,'#ff7a59','#c2456e'],[1,'#c2456e','#7a5cff']];
+// terbit hangat (Maghrib) → putih kebiruan (malam/tengah malam) → lavender-pink (subuh)
+const MOON=[[0,'#ffd9a8','#e0865a'],[.3,'#cfe6ff','#7fa6ff'],[.55,'#f2f6ff','#9fb4ff'],[.8,'#d8c8ff','#8f7cd8'],[1,'#ffc9b8','#c98ab0']];
+const hx=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));
+const mixc=(a,b,t)=>{const x=hx(a),y=hx(b);return 'rgb('+x.map((v,i)=>Math.round(v+(y[i]-v)*t)).join()+')'};
+function colorAt(st,p){
+  for(let i=0;i<st.length-1;i++){
+    const a=st[i],b=st[i+1];
+    if(p<=b[0]){const t=(p-a[0])/(b[0]-a[0]);return [mixc(a[1],b[1],t),mixc(a[2],b[2],t)]}
+  }
+  const l=st[st.length-1];return [l[1],l[2]];
+}
+// true = posisi orb digerakkan CSS scroll-timeline; false = fallback JS
+const SD=!!(window.CSS&&CSS.supports&&CSS.supports('animation-timeline','scroll()'));
+
+let max=1,raf=0,lastQc=-1,lastDark=null;
+const measure=()=>{max=Math.max(1,root.scrollHeight-innerHeight)};
+
+function drawOrb(){
+  raf=0;
+  const dark=root.dataset.theme==='dark';
+  const p=Math.min(1,Math.max(0,(window.scrollY||root.scrollTop||0)/max));
+  if(!SD){
+    const W=stage.clientWidth,H=stage.clientHeight,s=Math.sin(Math.PI*p);
+    const x=W*(.14+.72*p),y=H*(.64-.46*s),sc=.7+.4*s,rot=dark?p*40:p*320;
+    orb.style.transform='translate3d('+x.toFixed(2)+'px,'+y.toFixed(2)+'px,0) translate(-50%,-50%) scale('+sc.toFixed(4)+') rotate('+rot.toFixed(2)+'deg)';
+  }
+  // warna orb: hanya diperbarui tiap 1/60 progres (mengubah custom property = repaint gradien)
+  const qc=Math.round(p*60);
+  if(qc!==lastQc||dark!==lastDark){
+    lastQc=qc;
+    const c=colorAt(dark?MOON:SUN,qc/60);
+    orb.style.setProperty('--o1',c[0]);
+    orb.style.setProperty('--o2',c[1]);
+  }
+  lastDark=dark;
+}
+const req=()=>{if(!raf)raf=requestAnimationFrame(drawOrb)};
+
+addEventListener('scroll',req,{passive:true});
+addEventListener('resize',()=>{measure();req()});
+addEventListener('load',()=>{measure();req()});
+if(window.ResizeObserver)new ResizeObserver(()=>{measure();req()}).observe(document.body);
+new MutationObserver(req).observe(root,{attributes:true,attributeFilter:['data-theme']});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{measure();req()});
+
+// ganti tema: lingkaran warna langit tema tujuan membesar menutupi layar,
+// tema diganti DI BALIK penutup (kerja berat tak terlihat), lalu penutup memudar.
+const PL=[['#dff3e4','#fff6d5'],['#bfe3f7','#e8f7ee'],['#ffd7a8','#ffb7a0'],['#d9c8f0','#ffd0c2']];
+const PD=[['#1c1a46','#c05a45'],['#0b1a4a','#21468c'],['#000103','#05080f'],['#1b2050','#b0609a']];
+let themeBusy=false;
+window.themeVT=function(ev,fn){
+  if(themeBusy)return;
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(reduce||!document.body.animate){fn();return}
+  themeBusy=true;
+  const br=document.getElementById('themeBtn').getBoundingClientRect();
+  const x=br.left+br.width/2,y=br.top+br.height/2;
+  const r=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y))+6;
+  const toDark=root.dataset.theme!=='dark';
+  const ph=+root.dataset.ph||0,idx=ph<=1?0:Math.min(3,ph-1);
+  const pal=(toDark?PD:PL)[idx];
+  const ov=document.createElement('div');
+  ov.setAttribute('aria-hidden','true');
+  ov.style.cssText='position:fixed;inset:0;z-index:9996;pointer-events:none;background:linear-gradient(180deg,'+pal[0]+','+pal[1]+');clip-path:circle(0px at '+x+'px '+y+'px)';
+  document.body.appendChild(ov);
+  root.classList.add('theme-swap');
+  let swapped=false;
+  const swap=()=>{if(!swapped){swapped=true;fn()}};
+  ov.animate(
+    {clipPath:['circle(0px at '+x+'px '+y+'px)','circle('+r+'px at '+x+'px '+y+'px)']},
+    {duration:460,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'}
+  ).finished
+  .then(()=>{swap();return new Promise(res=>requestAnimationFrame(()=>requestAnimationFrame(res)))})
+  .then(()=>ov.animate({opacity:[1,0]},{duration:360,easing:'ease-out',fill:'forwards'}).finished)
+  .catch(()=>{})
+  .finally(()=>{swap();ov.remove();root.classList.remove('theme-swap');themeBusy=false});
+};
+
+// jeda animasi hiasan (awan/burung dll) hanya selama scroll
+let sT=0;
+addEventListener('scroll',()=>{
+  if(!root.classList.contains('scrolling'))root.classList.add('scrolling');
+  clearTimeout(sT);sT=setTimeout(()=>root.classList.remove('scrolling'),150);
+},{passive:true});
+
+measure();drawOrb();
 })();
 </script>
 </body>
